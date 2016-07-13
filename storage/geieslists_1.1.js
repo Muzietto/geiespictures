@@ -50,7 +50,8 @@ var L = function() {
         var bigCons = EMPTY;
         for (var i = anArray.length; i--; ) {
             // string, number or boolean
-            if (isAtom(anArray[i]))
+            //if (isAtom(anArray[i]))
+            if (!Array.isArray(anArray[i]))
                 bigCons = cons(anArray[i], bigCons);
             // else array
             else bigCons = cons(ArrayToList(anArray[i]), bigCons)
@@ -222,6 +223,16 @@ var L = function() {
         }
     }
 
+    // fold right
+    function fold(f, v, xs) { return isEmpty(xs) ? v : f(head(xs), fold(f, v, tail(xs))); }
+
+    // fold left
+    function foldl(s, a, xs) { return isEmpty(xs) ? a : foldl(s, s(a, head(xs)), tail(xs)); }
+
+    function first(list) { return head(list); }
+    function second(list) { return head(tail(list)); }
+    function third(list) { return head(tail(tail(list))); }
+
     return {
         nil: nil,
         cons: cons,
@@ -248,6 +259,11 @@ var L = function() {
         removeAt: removeAt,
         splitAt: splitAt,
         equalList: equalList,
-        msort: msort
+        msort: msort,
+        fold: fold,
+        foldl: foldl,
+        first: first,
+        second: second,
+        third: third
     }
 }();
