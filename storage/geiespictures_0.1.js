@@ -4,7 +4,12 @@ var P = function(L, V) {
   var edge1_frame = frame => L.second(frame);
   var edge2_frame = frame => L.third(frame);
 
-  var frame_coord_map = frame => vector => V.add_vect(origin_frame(frame), V.add_vect(V.scale_vect(edge1_frame(frame), V.xcor_vect(vector)), V.scale_vect(edge2_frame(frame), V.ycor_vect(vector))));
+  var frame_coord_map = frame => vector =>
+    V.add_vect(origin_frame(frame),
+               V.add_vect(V.scale_vect(edge1_frame(frame),
+                                       V.xcor_vect(vector)),
+                          V.scale_vect(edge2_frame(frame),
+                                       V.ycor_vect(vector))));
 
 
 
