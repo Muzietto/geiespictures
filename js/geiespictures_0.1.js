@@ -1,3 +1,12 @@
+/*
+	GEIESPICTURES - The picture language from chapter 2 of SICP
+	Author: Marco Faustinelli (contacts@faustinelli.net)
+	Web: http://faustinelli.net/
+	     http://faustinelli.wordpress.com/
+	Version: 0.1 - Requires Geieslists 1.1 and Geiesvectors 0.1
+
+	The MIT License - Copyright (c) 2016 Geiespictures Project
+*/
 var P = function(L, V) {
   var make_frame = (origin, edge1, edge2) => L.ArrayToList([origin, edge1, edge2]);
   var origin_frame = frame => L.first(frame);

@@ -1,3 +1,12 @@
+/*
+	GEIESVECTORS - A vector-based companion to GEIESLISTS
+	Author: Marco Faustinelli (contacts@faustinelli.net)
+	Web: http://faustinelli.net/
+	     http://faustinelli.wordpress.com/
+	Version: 0.1
+
+	The MIT License - Copyright (c) 2016 Geiesvectors Project
+*/
 var V = function(L) {
   var make_vect = (x, y) => L.ArrayToList([x, y]);
   var xcor_vect = (v) => L.first(v);

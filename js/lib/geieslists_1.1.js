@@ -5,7 +5,7 @@
 	     http://faustinelli.wordpress.com/
 	Version: 1.1
 
-	The MIT License - Copyright (c) 2012-2015 Geieslists Project
+	The MIT License - Copyright (c) 2012-2016 Geieslists Project
 */
 var L = function() {
     var EMPTY = function(x){return x;};
