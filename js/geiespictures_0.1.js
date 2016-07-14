@@ -45,6 +45,21 @@ var P = function(L, V) {
     }
     segments.forEach(draw_segment);
   }
+
+  var picture_painter = img => frame => (ctx) => {
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var imgWidth = img.width;
+    var imgHeight = img.height;
+    var newOriginX = canvasWidth/2;
+    var newOriginY = canvasHeight/2;
+    var X = x => x + newOriginX;
+    var Y = y => -(y + newOriginY + imgHeight) + canvasHeight;
+    var draw_img = img => {
+      ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame))));
+    }
+    draw_img(img);
+  }
   return {
     make_frame: make_frame,
     origin_frame: origin_frame,
@@ -52,6 +67,7 @@ var P = function(L, V) {
     edge2_frame: edge2_frame,
     frame_coord_map: frame_coord_map,
     make_segment: make_segment,
-    segments_painter: segments_painter
+    segments_painter: segments_painter,
+    picture_painter: picture_painter
   }
 }(L, V);
