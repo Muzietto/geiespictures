@@ -67,15 +67,25 @@ var P = function(L, V) {
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
+    // accepting only vert/hor-aligned frames
+    var frameWidthPx = V.xcor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
+    var frameHeightPx = V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
     var imgWidth = img.width;
     var imgHeight = img.height;
+    var imgWidthScale = frameWidthPx/imgWidth;
+    var imgHeightScale = frameHeightPx/imgHeight;
     var newOriginX = canvasWidth/2;
     var newOriginY = canvasHeight/2;
     var X = x => x + newOriginX;
     var Y = y => -(y + newOriginY + imgHeight) + canvasHeight;
     if (paintFrame) frame_painter(frame, ctx);
     var draw_img = img => {
+      // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
+      //ctx.transform(1.1,0,0,1,0,0);
+      ctx.scale(1,1);
+      ctx.translate(10,0)
       ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame))));
+      ctx.resetTransform();
     }
     draw_img(img);
   }
