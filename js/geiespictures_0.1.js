@@ -20,13 +20,33 @@ var P = function(L, V) {
                           V.scale_vect(edge2_frame(frame),
                                        V.ycor_vect(vector))));
 
+  var make_segment = (start, end) => L.ArrayToList([start, end]);
+  var start_segment = segment => L.first(segment);
+  var end_segment = segment => L.second(segment);
 
-
+  // painter(what)(where)(canvasContext)
+  var segments_painter = segments => frame => ctx => {
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var newY = y => -y + canvasHeight;
+    var draw_segment = segment => {
+      var coordinateMapper = frame_coord_map(frame);
+      var startPoint = coordinateMapper(start_segment(segment));
+      var endPoint = coordinateMapper(end_segment(segment));
+      ctx.beginPath();
+      ctx.moveTo(V.xcor_vect(startPoint), newY(V.ycor_vect(startPoint)));
+      ctx.lineTo(V.xcor_vect(endPoint), newY(V.ycor_vect(endPoint)));
+      ctx.stroke();
+    }
+    segments.forEach(draw_segment);
+  }
   return {
     make_frame: make_frame,
     origin_frame: origin_frame,
     edge1_frame: edge1_frame,
     edge2_frame: edge2_frame,
-    frame_coord_map: frame_coord_map
+    frame_coord_map: frame_coord_map,
+    make_segment: make_segment,
+    segments_painter: segments_painter
   }
 }(L, V);
