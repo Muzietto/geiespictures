@@ -25,17 +25,22 @@ var P = function(L, V) {
   var end_segment = segment => L.second(segment);
 
   // painter(what)(where)(canvasContext)
-  var segments_painter = segments => frame => ctx => {
+  var segments_painter = segments => frame => (ctx, color) => {
+    color = color || '#000000';
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
-    var newY = y => -y + canvasHeight;
+    var newOriginX = canvasWidth/2;
+    var newOriginY = canvasHeight/2;
+    var X = x => x + newOriginX;
+    var Y = y => -(y + newOriginY) + canvasHeight;
     var draw_segment = segment => {
       var coordinateMapper = frame_coord_map(frame);
       var startPoint = coordinateMapper(start_segment(segment));
       var endPoint = coordinateMapper(end_segment(segment));
       ctx.beginPath();
-      ctx.moveTo(V.xcor_vect(startPoint), newY(V.ycor_vect(startPoint)));
-      ctx.lineTo(V.xcor_vect(endPoint), newY(V.ycor_vect(endPoint)));
+      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
+      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      ctx.strokeStyle = color;
       ctx.stroke();
     }
     segments.forEach(draw_segment);
