@@ -82,8 +82,9 @@ var P = function(L, V) {
     var draw_img = img => {
       // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
       //ctx.transform(1.1,0,0,1,0,0);
-      ctx.scale(1,1);
-      ctx.translate(10,0)
+      ctx.scale(imgWidthScale,1);
+      //ctx.translate(-X(V.xcor_vect(origin_frame(frame)))*.78,0);
+      //ctx.translate(-X(V.xcor_vect(origin_frame(frame)))*(imgWidthScale-1),0);
       ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame))));
       ctx.resetTransform();
     }
