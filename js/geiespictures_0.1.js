@@ -25,8 +25,9 @@ var P = function(L, V) {
   var end_segment = segment => L.second(segment);
 
   // painter(what)(where)(canvasContext)
-  var segments_painter = segments => frame => (ctx, color) => {
+  var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
     color = color || '#000000';
+    if (paintFrame) frame_painter(frame, ctx, color);
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
     var newOriginX = canvasWidth/2;
@@ -46,7 +47,20 @@ var P = function(L, V) {
     segments.forEach(draw_segment);
   }
 
-  var picture_painter = img => frame => (ctx) => {
+  var frame_painter = (frame, ctx, color) => {
+    var frameAxes =
+      [
+        make_segment(V.make_vect(0,0),V.make_vect(1,0)),
+        make_segment(V.make_vect(1,0),V.make_vect(.95,.05)),
+        make_segment(V.make_vect(1,0),V.make_vect(.95,-.05)),
+        make_segment(V.make_vect(0,0),V.make_vect(0,1)),
+        make_segment(V.make_vect(0,1),V.make_vect(-.05,.95)),
+        make_segment(V.make_vect(0,1),V.make_vect(.05,.95))
+      ];
+    segments_painter(frameAxes)(frame)(ctx, color);
+  }
+
+  var picture_painter = img => (frame, paintFrame) => (ctx) => {
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
     var imgWidth = img.width;
@@ -55,6 +69,7 @@ var P = function(L, V) {
     var newOriginY = canvasHeight/2;
     var X = x => x + newOriginX;
     var Y = y => -(y + newOriginY + imgHeight) + canvasHeight;
+    if (paintFrame) frame_painter(frame, ctx);
     var draw_img = img => {
       ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame))));
     }
