@@ -50,12 +50,16 @@ var P = function(L, V) {
   var frame_painter = (frame, ctx, color) => {
     var frameAxes =
       [
-        make_segment(V.make_vect(0,0),V.make_vect(1,0)),
-        make_segment(V.make_vect(1,0),V.make_vect(.95,.05)),
-        make_segment(V.make_vect(1,0),V.make_vect(.95,-.05)),
-        make_segment(V.make_vect(0,0),V.make_vect(0,1)),
-        make_segment(V.make_vect(0,1),V.make_vect(-.05,.95)),
-        make_segment(V.make_vect(0,1),V.make_vect(.05,.95))
+        make_segment(V.make_vect(0,0),V.make_vect(1,0)),        // x-axis
+        make_segment(V.make_vect(1,0),V.make_vect(.95,.05)),    // x-arrow
+        make_segment(V.make_vect(1,0),V.make_vect(.95,-.05)),   // x-arrow
+        make_segment(V.make_vect(.95,.1),V.make_vect(.98,.16)), // x
+        make_segment(V.make_vect(.95,.16),V.make_vect(.98,.1)), // x
+        make_segment(V.make_vect(0,0),V.make_vect(0,1)),        // y-axis
+        make_segment(V.make_vect(0,1),V.make_vect(-.05,.95)),   // y-arrow
+        make_segment(V.make_vect(0,1),V.make_vect(.05,.95)),    // y-arrow
+        make_segment(V.make_vect(.08,.92),V.make_vect(.13,.98)),// y
+        make_segment(V.make_vect(.08,.98),V.make_vect(.1,.95))  // y
       ];
     segments_painter(frameAxes)(frame)(ctx, color);
   }
