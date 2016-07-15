@@ -37,6 +37,8 @@ describe('a sound picture system requires', function () {
     var luigi2 = V.sub_vect(pippo, pluto);
     expect(luigi.c).to.be.equal('[-5,4]');
     expect(luigi2.c).to.be.equal('[-1,-2]');
+    expect(V.length_vect(pippo)).to.be.gt(3.16);
+    expect(V.length_vect(pippo)).to.be.lt(3.17);
 
   });
   it('definitions for fold left and right', function() {
