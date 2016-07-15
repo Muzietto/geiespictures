@@ -49,27 +49,48 @@ var P = function(L, V) {
 
   var transform_painter = (painter, origin, xAxe, yAxe) => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
-    return painter(P.make_frame(mapper(origin),
+    var newFrame = P.make_frame(mapper(origin),
                                 V.sub_vect(mapper(xAxe),mapper(origin)),
-                                V.sub_vect(mapper(yAxe),mapper(origin))),
-                   paintFrame);
+                                V.sub_vect(mapper(yAxe),mapper(origin)))
+    return painter(newFrame, paintFrame);
   }
 
   var flip_vert = painter => transform_painter(painter,
-                                               V.make_vect(0,1),
-                                               V.make_vect(1,1),
-                                               V.make_vect(0,0));
+                                               V.make_vect(0,1), // new origin
+                                               V.make_vect(1,1), // new END of xAxe
+                                               V.make_vect(0,0));// new END of yAxe
+
+  var shrink_to_upper_right_naive = painter => (frame, paintFrame) => {
+    var mapper = frame_coord_map(frame);
+    var newOrigin = V.make_vect(.5,.5); // new origin
+    var newXAxis = V.make_vect(.5,0);  // new xAxe
+    var newYAxis = V.make_vect(0,.5); // new yAxe
+    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
+                              mapper(newXAxis),
+                              mapper(newYAxis));
+    return painter(newFrame, paintFrame);
+  }
 
   var flip_vert_naive = painter => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
-    var newOrigin = mapper(V.make_vect(0,1));
-    var newXAxis = mapper(V.make_vect(1,1));
-    var newYAxis = mapper(V.make_vect(0,0));
-    var newFrame = make_frame(newOrigin,
-                              V.sub_vect(newXAxis,newOrigin),
-                              V.sub_vect(newYAxis,newOrigin));
-
+    var newOrigin = V.make_vect(0,1); // new origin
+    var newXAxis = V.make_vect(1,0);  // new xAxe
+    var newYAxis = V.make_vect(0,-1); // new yAxe
+    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
+                              mapper(newXAxis),
+                              mapper(newYAxis));
     return painter(newFrame, paintFrame);
+  }
+
+  var flip_horiz_naive = painter => (frame, paintFrame) => {
+    var newOrigin = V.make_vect(1,0);
+    var newXSide = V.make_vect(-1,0);
+    var newYSide = V.make_vect(0,1);
+    var mapper = frame_coord_map(frame);
+    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
+                              mapper(newXSide),
+                              mapper(newYSide));
+    return painter(newFrame,paintFrame);
   }
 
   var frame_painter = (frame, ctx, color) => {
@@ -111,17 +132,13 @@ var P = function(L, V) {
     segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
   }
 
-  var flip_horiz_naive = painter => frame => {
-    var newOrigin = V.make_vect()
-  }
-
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
 
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
     var newOriginX = canvasWidth/2;
     var newOriginY = canvasHeight/2;
-    // accepting only vert/hor-aligned frames
+    // accepting only vert/hor-aligned frames - PICTURES CANNOT BE PAINTED IN 2ND && 4TH QUADRANT!?!?
     var frameWidthPx = V.xcor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
     var frameHeightPx = V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
     var imgWidth = img.width;
@@ -153,6 +170,8 @@ var P = function(L, V) {
     picture_painter: picture_painter,
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
-    flip_vert_naive: flip_vert_naive
+    flip_vert_naive: flip_vert_naive,
+    flip_horiz_naive: flip_horiz_naive,
+    shrink_to_upper_right_naive: shrink_to_upper_right_naive
   }
 }(L, V);
