@@ -47,6 +47,31 @@ var P = function(L, V) {
     segments.forEach(draw_segment);
   }
 
+  var transform_painter = (painter, origin, xAxe, yAxe) => (frame, paintFrame) => {
+    var mapper = frame_coord_map(frame);
+    return painter(P.make_frame(mapper(origin),
+                                V.sub_vect(mapper(xAxe),mapper(origin)),
+                                V.sub_vect(mapper(yAxe),mapper(origin))),
+                   paintFrame);
+  }
+
+  var flip_vert = painter => transform_painter(painter,
+                                               V.make_vect(0,1),
+                                               V.make_vect(1,1),
+                                               V.make_vect(0,0));
+
+  var flip_vert_naive = painter => (frame, paintFrame) => {
+    var mapper = frame_coord_map(frame);
+    var newOrigin = mapper(V.make_vect(0,1));
+    var newXAxis = mapper(V.make_vect(1,1));
+    var newYAxis = mapper(V.make_vect(0,0));
+    var newFrame = make_frame(newOrigin,
+                              V.sub_vect(newXAxis,newOrigin),
+                              V.sub_vect(newYAxis,newOrigin));
+
+    return painter(newFrame, paintFrame);
+  }
+
   var frame_painter = (frame, ctx, color) => {
     var frameAxes =
       [
@@ -62,6 +87,28 @@ var P = function(L, V) {
         make_segment(V.make_vect(.08,.98),V.make_vect(.1,.95))  // y
       ];
     segments_painter(frameAxes)(frame)(ctx, color);
+  }
+
+  var diamond_painter = (frame, paintFrame) => (ctx, color) => {
+    var diamondPieces =
+      [
+        make_segment(V.make_vect(.14,.50),V.make_vect(.50,.86)),
+        make_segment(V.make_vect(.50,.86),V.make_vect(.86,.50)),
+        make_segment(V.make_vect(.86,.50),V.make_vect(.50,.14)),
+        make_segment(V.make_vect(.50,.14),V.make_vect(.14,.50)),
+
+        make_segment(V.make_vect(.28,.50),V.make_vect(.50,.72)),
+        make_segment(V.make_vect(.50,.72),V.make_vect(.72,.50)),
+        make_segment(V.make_vect(.72,.50),V.make_vect(.50,.28)),
+        make_segment(V.make_vect(.50,.28),V.make_vect(.28,.50)),
+
+        make_segment(V.make_vect(.42,.50),V.make_vect(.50,.58)),
+        make_segment(V.make_vect(.50,.58),V.make_vect(.58,.50)),
+        make_segment(V.make_vect(.58,.50),V.make_vect(.50,.42)),
+        make_segment(V.make_vect(.50,.42),V.make_vect(.42,.50)),
+        make_segment(V.make_vect(.5,.5),V.make_vect(1,1))
+      ];
+    segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
   }
 
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
@@ -90,6 +137,7 @@ var P = function(L, V) {
     }
     draw_img(img);
   }
+
   return {
     make_frame: make_frame,
     origin_frame: origin_frame,
@@ -98,6 +146,9 @@ var P = function(L, V) {
     frame_coord_map: frame_coord_map,
     make_segment: make_segment,
     segments_painter: segments_painter,
-    picture_painter: picture_painter
+    picture_painter: picture_painter,
+    diamond_painter: diamond_painter,
+    flip_vert: flip_vert,
+    flip_vert_naive: flip_vert_naive
   }
 }(L, V);
