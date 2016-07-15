@@ -50,7 +50,11 @@ var halfwayLeft = V.make_vect(-canvasWidth/2, 0);
 var halfwayDown = V.make_vect(0, -canvasHeight/2);
 var quarterRight = V.make_vect(canvasWidth/4, 0);
 var quarterUp = V.make_vect(0, canvasHeight/4);
-var quarterRightUp = V.make_vect(canvasWidth/4, canvasHeight/4);
+var quarterLeft = V.make_vect(-canvasWidth/4, 0);
+var quarterDown = V.make_vect(0, -canvasHeight/4);
+
+var halfwayRightUp = V.make_vect(canvasWidth/2, canvasHeight/2);
+var quartWayRightUp = V.make_vect(canvasWidth/4, canvasHeight/4);
 
 
 // FRAMES
@@ -58,17 +62,25 @@ var firstQuarter = P.make_frame(origin, halfwayRight, halfwayUp);
 var secondQuarter = P.make_frame(origin, halfwayDown, halfwayRight);
 var thirdQuarter = P.make_frame(origin, halfwayLeft, halfwayDown);
 var fourthQuarter = P.make_frame(origin, halfwayUp, halfwayLeft);
-var quarterRightUp = P.make_frame(quarterRightUp, quarterRight, quarterUp);
+var quarterRightUp = P.make_frame(quartWayRightUp, quarterRight, quarterUp);
+var quarterRightUpFromOrigin = P.make_frame(origin, quarterRight, quarterUp);
+// next one is rotated 180deg clockwise
+var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 
 // painters at work
 P.segments_painter([oneThirdToTwoThirds])(firstQuarter)(ctx);
-P.segments_painter([oneThirdToTwoThirds])(secondQuarter)(ctx, 'red');
+P.segments_painter([oneThirdToTwoThirds])(secondQuarter,true)(ctx, 'red');
 P.segments_painter([oneThirdToTwoThirds])(thirdQuarter)(ctx, 'blue');
-P.segments_painter([oneThirdToTwoThirds])(fourthQuarter)(ctx, 'green');
+P.segments_painter([oneThirdToTwoThirds])(fourthQuarter,true)(ctx, 'green');
 
 // image painter at work
-window.onload = function() {
-    point(canvasWidth/2,canvasHeight/2);
-    var img = document.getElementById("scream");
-    P.picture_painter(img)(quarterRightUp)(ctx);
-};
+//window.onload = function() {
+//    point(canvasWidth/2,canvasHeight/2);
+//    var img = document.getElementById("scream");
+//    P.picture_painter(img)(quarterRightUp,true)(ctx);
+//};
+
+P.diamond_painter(quarterRightUp,true)(ctx);
+
+P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
+P.flip_vert_naive(P.diamond_painter)(quarterLeftDownFromOrigin,true)(ctx);
