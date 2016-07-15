@@ -74,13 +74,14 @@ P.segments_painter([oneThirdToTwoThirds])(thirdQuarter)(ctx, 'blue');
 P.segments_painter([oneThirdToTwoThirds])(fourthQuarter,true)(ctx, 'green');
 
 // image painter at work
-//window.onload = function() {
-//    point(canvasWidth/2,canvasHeight/2);
-//    var img = document.getElementById("scream");
-//    P.picture_painter(img)(quarterRightUp,true)(ctx);
-//};
+window.onload = function() {
+    point(canvasWidth/2,canvasHeight/2);
+    var img = document.getElementById("scream");
+    P.picture_painter(img)(quarterRightUp,true)(ctx);
+    P.picture_painter(img)(thirdQuarter)(ctx);
+    P.flip_vert_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
+};
 
 P.diamond_painter(quarterRightUp,true)(ctx);
 
 P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
-P.flip_vert_naive(P.diamond_painter)(quarterLeftDownFromOrigin,true)(ctx);
