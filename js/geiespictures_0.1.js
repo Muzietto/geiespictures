@@ -111,31 +111,35 @@ var P = function(L, V) {
     segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
   }
 
+  var flip_horiz_naive = painter => frame => {
+    var newOrigin = V.make_vect()
+  }
+
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
+
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
+    var newOriginX = canvasWidth/2;
+    var newOriginY = canvasHeight/2;
     // accepting only vert/hor-aligned frames
     var frameWidthPx = V.xcor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
     var frameHeightPx = V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)));
     var imgWidth = img.width;
     var imgHeight = img.height;
+    ctx.translate(newOriginX,newOriginY);
     var imgWidthScale = frameWidthPx/imgWidth;
     var imgHeightScale = frameHeightPx/imgHeight;
-    var newOriginX = canvasWidth/2;
-    var newOriginY = canvasHeight/2;
-    var X = x => x + newOriginX;
-    var Y = y => -(y + newOriginY + imgHeight) + canvasHeight;
-    if (paintFrame) frame_painter(frame, ctx);
+    ctx.scale(imgWidthScale, imgHeightScale);
+    var X = x => x/imgWidthScale;
+    var Y = y => -y/imgHeightScale;
     var draw_img = img => {
       // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
       //ctx.transform(1.1,0,0,1,0,0);
-      ctx.scale(imgWidthScale,1);
-      //ctx.translate(-X(V.xcor_vect(origin_frame(frame)))*.78,0);
-      //ctx.translate(-X(V.xcor_vect(origin_frame(frame)))*(imgWidthScale-1),0);
-      ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame))));
+      ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame)) + imgHeight*imgHeightScale));
       ctx.resetTransform();
     }
     draw_img(img);
+    if (paintFrame) frame_painter(frame, ctx);
   }
 
   return {
