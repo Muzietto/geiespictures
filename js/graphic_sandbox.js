@@ -64,6 +64,8 @@ var thirdQuarter = P.make_frame(origin, halfwayLeft, halfwayDown);
 var fourthQuarter = P.make_frame(origin, halfwayUp, halfwayLeft);
 var quarterRightUp = P.make_frame(quartWayRightUp, quarterRight, quarterUp);
 var quarterRightUpFromOrigin = P.make_frame(origin, quarterRight, quarterUp);
+// next one is rotated 90deg counterclockwise
+var quarterLeftUpFromOrigin = P.make_frame(origin, quarterUp, quarterLeft);
 // next one is rotated 180deg clockwise
 var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 
@@ -79,9 +81,12 @@ window.onload = function() {
     var img = document.getElementById("scream");
     P.picture_painter(img)(quarterRightUp,true)(ctx);
     P.picture_painter(img)(thirdQuarter)(ctx);
-    P.flip_vert_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
+    P.flip_horiz_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
+    P.picture_painter(img)(secondQuarter)(ctx);
+    P.picture_painter(img)(fourthQuarter)(ctx);
 };
 
 P.diamond_painter(quarterRightUp,true)(ctx);
 
 P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
+P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
