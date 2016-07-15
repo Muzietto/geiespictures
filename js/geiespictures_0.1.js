@@ -138,7 +138,10 @@ var P = function(L, V) {
     var canvasHeight = ctx.canvas.clientHeight;
     var newOriginX = canvasWidth/2;
     var newOriginY = canvasHeight/2;
-    // accepting only vert/hor-aligned frames - PICTURES CANNOT BE PAINTED IN 2ND && 4TH QUADRANT!?!?
+    // accepting only hor/vert-aligned frames - PICTURES CANNOT BE PAINTED IN 2ND && 4TH QUADRANT!?!?
+//        var frameWidthPx = V.length_vect(P.edge1_frame(frame));
+//        var frameHeightPx = V.length_vect(P.edge2_frame(frame));
+
     var frameWidthPx = /*Math.max(*/V.xcor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0)))/*,
                                 -(V.ycor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)))))*/;
     var frameHeightPx = /*Math.max(*/V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)))/*,
