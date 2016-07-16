@@ -190,11 +190,13 @@ var P = function(L, V) {
     edge1_frame: edge1_frame,
     edge2_frame: edge2_frame,
     frame_coord_map: frame_coord_map,
+    rel_frame_coord_map: rel_frame_coord_map,
     make_segment: make_segment,
     segments_painter: segments_painter,
     picture_painter: picture_painter,
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
+    flip_horiz: flip_horiz,
     flip_vert_naive: flip_vert_naive,
     flip_horiz_naive: flip_horiz_naive,
     shrink_to_upper_right_naive: shrink_to_upper_right_naive
