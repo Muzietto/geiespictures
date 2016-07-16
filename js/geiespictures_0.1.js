@@ -43,15 +43,12 @@ var P = function(L, V) {
     var Y = y => -(y + newCanvasOriginY) + canvasHeight;
     var draw_segment = segment => {
       ctx.resetTransform();
-      ctx.translate(newCanvasOriginX, newCanvasOriginY);
       var coordinateMapper = frame_coord_map(frame);
       var startPoint = coordinateMapper(start_segment(segment));
       var endPoint = coordinateMapper(end_segment(segment));
       ctx.beginPath();
-      //ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
-      //ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
-      ctx.moveTo(V.xcor_vect(startPoint), V.ycor_vect(startPoint));
-      ctx.lineTo(V.xcor_vect(endPoint), V.ycor_vect(endPoint));
+      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
+      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
       ctx.strokeStyle = color;
       ctx.stroke();
       ctx.resetTransform();
@@ -167,12 +164,14 @@ var P = function(L, V) {
     var mapper = frame_coord_map(frame);
     var frameOriginX = V.xcor_vect(origin_frame(frame));
     var frameOriginY = V.ycor_vect(origin_frame(frame));
-    //ctx.translate(frameOriginX, -frameOriginY);
-    ctx.translate(frameOriginX, frameOriginY);
+    ctx.translate(frameOriginX, -frameOriginY);
 
     // currently ignoring skewed y-axes
     var frameRotation = V.angle_vect(edge1_frame(frame));
-    ctx.rotate(frameRotation);
+    ctx.rotate(-frameRotation);
+    
+    // final vertical transfer
+    ctx.translate(0, -frameHeight);
 
     var imgWidthScale = frameWidth/imgWidth;
     var imgHeightScale = frameHeight/imgHeight;

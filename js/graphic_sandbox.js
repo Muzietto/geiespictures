@@ -76,10 +76,10 @@ var quarterLeftUpFromOrigin = P.make_frame(origin, quarterUp, quarterLeft);
 var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 
 // painters at work
-P.segments_painter([oneThirdToTwoThirds])(firstQuarter)(ctx);
-P.segments_painter([oneThirdToTwoThirds])(secondQuarter,true)(ctx, 'red');
-P.segments_painter([oneThirdToTwoThirds])(thirdQuarter)(ctx, 'blue');
-P.segments_painter([oneThirdToTwoThirds])(fourthQuarter,true)(ctx, 'green');
+//P.segments_painter([oneThirdToTwoThirds])(firstQuarter)(ctx);
+//P.segments_painter([oneThirdToTwoThirds])(secondQuarter,true)(ctx, 'red');
+//P.segments_painter([oneThirdToTwoThirds])(thirdQuarter)(ctx, 'blue');
+//P.segments_painter([oneThirdToTwoThirds])(fourthQuarter,true)(ctx, 'green');
 
 // image painter at work
 window.onload = function() {
@@ -88,13 +88,15 @@ window.onload = function() {
     //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
     P.picture_painter(img)(quarterRightUp,true)(ctx);
     P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    //P.picture_painter(img)(thirdQuarter)(ctx);
-    //P.flip_horiz_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
-    P.picture_painter(img)(secondQuarter,true)(ctx);
-    //P.picture_painter(img)(fourthQuarter)(ctx);
+    P.picture_painter(img)(thirdQuarter)(ctx);
+    //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
+    //P.picture_painter(img)(secondQuarter,true)(ctx);
+    //P.picture_painter(img)(fourthQuarter,true)(ctx);
 };
 
-//P.diamond_painter(quarterRightUp,true)(ctx);
+P.diamond_painter(quarterRightUp,true)(ctx);
+//P.diamond_painter(secondQuarter,true)(ctx);
+P.flip_horiz_naive(P.diamond_painter)(secondQuarter,true)(ctx);
 
-//P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
-//P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
+P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
+P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
