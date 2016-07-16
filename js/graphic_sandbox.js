@@ -88,10 +88,10 @@ window.onload = function() {
     //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
     P.picture_painter(img)(quarterRightUp,true)(ctx);
     P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    P.picture_painter(img)(thirdQuarter)(ctx);
+    //P.picture_painter(img)(thirdQuarter)(ctx);
     //P.flip_horiz_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
     P.picture_painter(img)(secondQuarter,true)(ctx);
-    P.picture_painter(img)(fourthQuarter)(ctx);
+    //P.picture_painter(img)(fourthQuarter)(ctx);
 };
 
 //P.diamond_painter(quarterRightUp,true)(ctx);
