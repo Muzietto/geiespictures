@@ -13,12 +13,19 @@ var P = function(L, V) {
   var edge1_frame = frame => L.second(frame);
   var edge2_frame = frame => L.third(frame);
 
+  // canvas pixels relative to center of canvas
   var frame_coord_map = frame => vector =>
     V.add_vect(origin_frame(frame),
                V.add_vect(V.scale_vect(edge1_frame(frame),
                                        V.xcor_vect(vector)),
                           V.scale_vect(edge2_frame(frame),
                                        V.ycor_vect(vector))));
+  // canvas pixels relative to center of frame
+  var rel_frame_coord_map = frame => vector =>
+    V.add_vect(V.scale_vect(edge1_frame(frame),
+                           V.xcor_vect(vector)),
+              V.scale_vect(edge2_frame(frame),
+                           V.ycor_vect(vector)));
 
   var make_segment = (start, end) => L.ArrayToList([start, end]);
   var start_segment = segment => L.first(segment);
