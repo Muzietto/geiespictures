@@ -65,6 +65,11 @@ var P = function(L, V) {
                                                V.make_vect(1,1), // new END of xAxe
                                                V.make_vect(0,0));// new END of yAxe
 
+  var flip_horiz = painter => transform_painter(painter,
+                                               V.make_vect(1,0), // new origin
+                                               V.make_vect(0,0), // new END of xAxe
+                                               V.make_vect(1,1));// new END of yAxe
+
   var shrink_to_upper_right_naive = painter => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
     var newOrigin = V.make_vect(.5,.5); // new origin
