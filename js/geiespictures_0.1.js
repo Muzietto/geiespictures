@@ -107,7 +107,7 @@ var P = function(L, V) {
     var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
                               mapper(newXSide),
                               mapper(newYSide));
-    return painter(newFrame,paintFrame);
+    return painter(newFrame, paintFrame);
   }
 
   // paints also rotated/skewed frames
