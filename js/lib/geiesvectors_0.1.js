@@ -38,7 +38,7 @@ var V = function(L) {
                                0,0,1);
     return result;
   };
-  
+
   return {
     make_vect: make_vect,
     xcor_vect: xcor_vect,

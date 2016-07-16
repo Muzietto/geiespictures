@@ -88,7 +88,7 @@ describe('a sound picture system requires', function () {
     expect(scaled._31()).to.be.equal(0);
     expect(scaled._32()).to.be.equal(0);
     expect(scaled._33()).to.be.equal(1);
-    
+
     var rot30 = V.rotation_matrix(Math.PI/6);
     expect(Math.round(100*rot30._11())).to.be.equal(87);
     expect(Math.round(100*rot30._12())).to.be.equal(-50);
@@ -99,7 +99,36 @@ describe('a sound picture system requires', function () {
     expect(Math.round(100*rot30._31())).to.be.equal(0);
     expect(Math.round(100*rot30._32())).to.be.equal(0);
     expect(Math.round(100*rot30._33())).to.be.equal(100);
-    
+
+    var trasl200x = V.translation_matrix(200,0);
+    var scale2x = V.scaling_matrix(2,1);
+
+    // translate then rotate then scale
+    var traslRotoScale = V.mult_matrix(V.mult_matrix(trasl200x,rot30),scale2x);
+    // next one is (1.73,1,-.5,.87,200,0)
+    expect(Math.round(100*traslRotoScale._11())).to.be.equal(173);
+    expect(Math.round(100*traslRotoScale._12())).to.be.equal(-50);
+    expect(Math.round(100*traslRotoScale._13())).to.be.equal(20000);
+    expect(Math.round(100*traslRotoScale._21())).to.be.equal(100);
+    expect(Math.round(100*traslRotoScale._22())).to.be.equal(87);
+    expect(Math.round(100*traslRotoScale._23())).to.be.equal(0);
+    expect(Math.round(100*traslRotoScale._31())).to.be.equal(0);
+    expect(Math.round(100*traslRotoScale._32())).to.be.equal(0);
+    expect(Math.round(100*traslRotoScale._33())).to.be.equal(100);
+
+    // rotate then translate then scale
+    var rotoTraslScale = V.mult_matrix(V.mult_matrix(rot30,trasl200x),scale2x);
+    // next one is (1.73,1,-.5,.87,174,100) <-- !!
+    expect(Math.round(100*rotoTraslScale._11())).to.be.equal(173);
+    expect(Math.round(100*rotoTraslScale._12())).to.be.equal(-50);
+    expect(Math.round(100*rotoTraslScale._13())).to.be.equal(17321);
+    expect(Math.round(100*rotoTraslScale._21())).to.be.equal(100);
+    expect(Math.round(100*rotoTraslScale._22())).to.be.equal(87);
+    expect(Math.round(100*rotoTraslScale._23())).to.be.equal(10000);
+    expect(Math.round(100*rotoTraslScale._31())).to.be.equal(0);
+    expect(Math.round(100*rotoTraslScale._32())).to.be.equal(0);
+    expect(Math.round(100*rotoTraslScale._33())).to.be.equal(100);
+    //debugger;    
   });
   it('definitions for fold left and right', function() {
 
