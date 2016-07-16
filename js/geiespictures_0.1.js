@@ -30,19 +30,24 @@ var P = function(L, V) {
     if (paintFrame) frame_painter(frame, ctx, color);
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
-    var newOriginX = canvasWidth/2;
-    var newOriginY = canvasHeight/2;
-    var X = x => x + newOriginX;
-    var Y = y => -(y + newOriginY) + canvasHeight;
+    var newCanvasOriginX = canvasWidth/2;
+    var newCanvasOriginY = canvasHeight/2;
+    var X = x => x + newCanvasOriginX;
+    var Y = y => -(y + newCanvasOriginY) + canvasHeight;
     var draw_segment = segment => {
+      ctx.resetTransform();
+      ctx.translate(newCanvasOriginX, newCanvasOriginY);
       var coordinateMapper = frame_coord_map(frame);
       var startPoint = coordinateMapper(start_segment(segment));
       var endPoint = coordinateMapper(end_segment(segment));
       ctx.beginPath();
-      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
-      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      //ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
+      //ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      ctx.moveTo(V.xcor_vect(startPoint), V.ycor_vect(startPoint));
+      ctx.lineTo(V.xcor_vect(endPoint), V.ycor_vect(endPoint));
       ctx.strokeStyle = color;
       ctx.stroke();
+      ctx.resetTransform();
     }
     segments.forEach(draw_segment);
   }
@@ -93,6 +98,7 @@ var P = function(L, V) {
     return painter(newFrame,paintFrame);
   }
 
+  // paints also rotated/skewed frames
   var frame_painter = (frame, ctx, color) => {
     var frameAxes =
       [
@@ -133,34 +139,36 @@ var P = function(L, V) {
   }
 
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
+    ctx.resetTransform();
 
-    var canvasWidth = ctx.canvas.clientWidth;
-    var canvasHeight = ctx.canvas.clientHeight;
-    var newOriginX = canvasWidth/2;
-    var newOriginY = canvasHeight/2;
-    // accepting only hor/vert-aligned frames - PICTURES CANNOT BE PAINTED IN 2ND && 4TH QUADRANT!?!?
-//        var frameWidthPx = V.length_vect(P.edge1_frame(frame));
-//        var frameHeightPx = V.length_vect(P.edge2_frame(frame));
-
-    var frameWidthPx = /*Math.max(*/V.xcor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0)))/*,
-                                -(V.ycor_vect(frame_coord_map(frame)(V.make_vect(1,0))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)))))*/;
-    var frameHeightPx = /*Math.max(*/V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.ycor_vect(frame_coord_map(frame)(V.make_vect(0,0)))/*,
-                                 V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,1))) - V.xcor_vect(frame_coord_map(frame)(V.make_vect(0,0))))*/;
     var imgWidth = img.width;
     var imgHeight = img.height;
-    ctx.translate(newOriginX,newOriginY);
-    var imgWidthScale = frameWidthPx/imgWidth;
-    var imgHeightScale = frameHeightPx/imgHeight;
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var frameWidth = V.length_vect(edge1_frame(frame));
+    var frameHeight = V.length_vect(edge2_frame(frame));
+
+    var newCanvasOriginX = canvasWidth/2;
+    var newCanvasOriginY = canvasHeight/2;
+    ctx.translate(newCanvasOriginX, newCanvasOriginY);
+
+    var mapper = frame_coord_map(frame);
+    var frameOriginX = V.xcor_vect(origin_frame(frame));
+    var frameOriginY = V.ycor_vect(origin_frame(frame));
+    //ctx.translate(frameOriginX, -frameOriginY);
+    ctx.translate(frameOriginX, frameOriginY);
+
+    // currently ignoring skewed y-axes
+    var frameRotation = V.angle_vect(edge1_frame(frame));
+    ctx.rotate(frameRotation);
+
+    var imgWidthScale = frameWidth/imgWidth;
+    var imgHeightScale = frameHeight/imgHeight;
     ctx.scale(imgWidthScale, imgHeightScale);
-    var X = x => x/imgWidthScale;
-    var Y = y => -y/imgHeightScale;
-    var draw_img = img => {
-      // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
-      //ctx.transform(1.1,0,0,1,0,0);
-      ctx.drawImage(img, X(V.xcor_vect(origin_frame(frame))), Y(V.ycor_vect(origin_frame(frame)) + imgHeight*imgHeightScale));
-      ctx.resetTransform();
-    }
-    draw_img(img);
+
+    // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
+    ctx.drawImage(img,0,0);
+    ctx.resetTransform();
     if (paintFrame) frame_painter(frame, ctx);
   }
 

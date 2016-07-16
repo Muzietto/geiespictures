@@ -49,7 +49,9 @@ var halfwayUp = V.make_vect(0, canvasHeight/2);
 var halfwayLeft = V.make_vect(-canvasWidth/2, 0);
 var halfwayDown = V.make_vect(0, -canvasHeight/2);
 var quarterRight = V.make_vect(canvasWidth/4, 0);
+var quarterRightMin30Deg = V.make_vect(Math.cos(Math.PI/6)*canvasWidth/4, -Math.sin(Math.PI/6)*canvasWidth/4);
 var quarterUp = V.make_vect(0, canvasHeight/4);
+var quarterUp60Deg = V.make_vect(Math.sin(Math.PI/6)*canvasHeight/4, Math.cos(Math.PI/6)*canvasHeight/4);
 var quarterLeft = V.make_vect(-canvasWidth/4, 0);
 var quarterDown = V.make_vect(0, -canvasHeight/4);
 
@@ -63,7 +65,11 @@ var secondQuarter = P.make_frame(origin, halfwayDown, halfwayRight);
 var thirdQuarter = P.make_frame(origin, halfwayLeft, halfwayDown);
 var fourthQuarter = P.make_frame(origin, halfwayUp, halfwayLeft);
 var quarterRightUp = P.make_frame(quartWayRightUp, quarterRight, quarterUp);
+var quarterRightUpSkewed = P.make_frame(quartWayRightUp, quarterRight, quarterUp60Deg);
+var quarterRightSkewedDownUpSkewed = P.make_frame(quartWayRightUp, quarterRightMin30Deg, quarterUp60Deg);
 var quarterRightUpFromOrigin = P.make_frame(origin, quarterRight, quarterUp);
+// next one is rotated 30deg ccw
+var deg30ccwFrame = P.make_frame(origin, quarterRightMin30Deg, quarterUp60Deg);
 // next one is rotated 90deg counterclockwise
 var quarterLeftUpFromOrigin = P.make_frame(origin, quarterUp, quarterLeft);
 // next one is rotated 180deg clockwise
@@ -79,14 +85,16 @@ P.segments_painter([oneThirdToTwoThirds])(fourthQuarter,true)(ctx, 'green');
 window.onload = function() {
     point(canvasWidth/2,canvasHeight/2);
     var img = document.getElementById("scream");
+    //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
     P.picture_painter(img)(quarterRightUp,true)(ctx);
+    P.picture_painter(img)(deg30ccwFrame,true)(ctx);
     P.picture_painter(img)(thirdQuarter)(ctx);
-    P.flip_horiz_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
-    P.picture_painter(img)(secondQuarter)(ctx);
+    //P.flip_horiz_naive(P.picture_painter(img))(quarterLeftDownFromOrigin,true)(ctx);
+    P.picture_painter(img)(secondQuarter,true)(ctx);
     P.picture_painter(img)(fourthQuarter)(ctx);
 };
 
-P.diamond_painter(quarterRightUp,true)(ctx);
+//P.diamond_painter(quarterRightUp,true)(ctx);
 
-P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
-P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
+//P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
+//P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
