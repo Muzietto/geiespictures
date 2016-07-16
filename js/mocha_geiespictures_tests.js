@@ -41,6 +41,34 @@ describe('a sound picture system requires', function () {
     expect(V.length_vect(pippo)).to.be.lt(3.17);
 
   });
+  it('a series of matrix operations for HTML5 canvases', function() {
+
+    var pippo = V.transf_matrix(11,12,13,21,22,23,31,32,33);
+    expect(pippo._11()).to.be.equal(11);
+    expect(pippo._12()).to.be.equal(12);
+    expect(pippo._13()).to.be.equal(13);
+    expect(pippo._21()).to.be.equal(21);
+    expect(pippo._22()).to.be.equal(22);
+    expect(pippo._23()).to.be.equal(23);
+    expect(pippo._31()).to.be.equal(31);
+    expect(pippo._32()).to.be.equal(32);
+    expect(pippo._33()).to.be.equal(33);
+    
+    var x = V.transf_matrix(1,2,3,4,5,6,7,8,9);
+    var y = V.transf_matrix(5,6,7,8,9,10,11,12,13);
+    var xy = V.mult_matrix(x,y);
+    expect(xy._11()).to.be.equal(54);
+    expect(xy._12()).to.be.equal(60);
+    expect(xy._13()).to.be.equal(66);
+    expect(xy._21()).to.be.equal(126);
+    expect(xy._22()).to.be.equal(141);
+    expect(xy._23()).to.be.equal(156);
+    expect(xy._31()).to.be.equal(198);
+    expect(xy._32()).to.be.equal(222);
+    expect(xy._33()).to.be.equal(246);
+    
+
+  });
   it('definitions for fold left and right', function() {
 
     expect(L.fold((x,ys)=>x+ys,0,L.ArrayToList([1,3,5]))).to.be.equal(9);
