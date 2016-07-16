@@ -66,8 +66,40 @@ describe('a sound picture system requires', function () {
     expect(xy._31()).to.be.equal(198);
     expect(xy._32()).to.be.equal(222);
     expect(xy._33()).to.be.equal(246);
-    
 
+    var translated = V.translation_matrix(2,5);
+    expect(translated._11()).to.be.equal(1);
+    expect(translated._12()).to.be.equal(0);
+    expect(translated._13()).to.be.equal(2);
+    expect(translated._21()).to.be.equal(0);
+    expect(translated._22()).to.be.equal(1);
+    expect(translated._23()).to.be.equal(5);
+    expect(translated._31()).to.be.equal(0);
+    expect(translated._32()).to.be.equal(0);
+    expect(translated._33()).to.be.equal(1);
+
+    var scaled = V.scaling_matrix(2,5);
+    expect(scaled._11()).to.be.equal(2);
+    expect(scaled._12()).to.be.equal(0);
+    expect(scaled._13()).to.be.equal(0);
+    expect(scaled._21()).to.be.equal(0);
+    expect(scaled._22()).to.be.equal(5);
+    expect(scaled._23()).to.be.equal(0);
+    expect(scaled._31()).to.be.equal(0);
+    expect(scaled._32()).to.be.equal(0);
+    expect(scaled._33()).to.be.equal(1);
+    
+    var rot30 = V.rotation_matrix(Math.PI/6);
+    expect(Math.round(100*rot30._11())).to.be.equal(87);
+    expect(Math.round(100*rot30._12())).to.be.equal(-50);
+    expect(Math.round(100*rot30._13())).to.be.equal(0);
+    expect(Math.round(100*rot30._21())).to.be.equal(50);
+    expect(Math.round(100*rot30._22())).to.be.equal(87);
+    expect(Math.round(100*rot30._23())).to.be.equal(0);
+    expect(Math.round(100*rot30._31())).to.be.equal(0);
+    expect(Math.round(100*rot30._32())).to.be.equal(0);
+    expect(Math.round(100*rot30._33())).to.be.equal(100);
+    
   });
   it('definitions for fold left and right', function() {
 

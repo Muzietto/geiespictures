@@ -30,6 +30,14 @@ var V = function(L) {
     m1._31()*m2._12() + m1._32()*m2._22() + m1._33()*m2._32(), // _32
     m1._31()*m2._13() + m1._32()*m2._23() + m1._33()*m2._33()  // _33
   );
+  var translation_matrix = (tx, ty) => transf_matrix(1,0,tx,0,1,ty,0,0,1);
+  var scaling_matrix = (sx, sy) => transf_matrix(sx,0,0,0,sy,0,0,0,1);
+  var rotation_matrix = (radians) => {
+    var result = transf_matrix(Math.cos(radians),-Math.sin(radians),0,
+                               Math.sin(radians),Math.cos(radians),0,
+                               0,0,1);
+    return result;
+  };
   
   return {
     make_vect: make_vect,
@@ -40,6 +48,9 @@ var V = function(L) {
     sub_vect: sub_vect,
     scale_vect: scale_vect,
     transf_matrix: transf_matrix,
-    mult_matrix: mult_matrix
+    mult_matrix: mult_matrix,
+    translation_matrix: translation_matrix,
+    scaling_matrix: scaling_matrix,
+    rotation_matrix: rotation_matrix
   }
 }(L);
