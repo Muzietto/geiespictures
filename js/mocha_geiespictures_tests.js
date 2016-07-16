@@ -128,8 +128,16 @@ describe('a sound picture system requires', function () {
     expect(Math.round(100*rotoTraslScale._31())).to.be.equal(0);
     expect(Math.round(100*rotoTraslScale._32())).to.be.equal(0);
     expect(Math.round(100*rotoTraslScale._33())).to.be.equal(100);
-    //debugger;    
-  });
+
+    var deg30 = V.make_vect(.87,.5);
+    expect(Math.round(100*V.angle_vect(deg30))).to.be.equal(52);
+    var minusDeg30 = V.make_vect(.87,-.5);
+    expect(Math.round(100*V.angle_vect(minusDeg30))).to.be.equal(-52);
+    var minusDeg60 = V.make_vect(.5,-.87);
+    expect(Math.round(100*V.angle_vect(minusDeg60))).to.be.equal(-105);
+    var deg120 = V.make_vect(-.5,.87);
+    expect(Math.round(100*V.angle_vect(deg120))).to.be.equal(209);
+    });
   it('definitions for fold left and right', function() {
 
     expect(L.fold((x,ys)=>x+ys,0,L.ArrayToList([1,3,5]))).to.be.equal(9);

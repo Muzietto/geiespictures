@@ -38,6 +38,12 @@ var V = function(L) {
                                0,0,1);
     return result;
   };
+  
+  var angle_vect = vect => {
+    var result = Math.atan(ycor_vect(vect)/xcor_vect(vect));
+    if (xcor_vect(vect) < 0) result = result + Math.PI;
+    return result;
+  };
 
   return {
     make_vect: make_vect,
@@ -51,6 +57,7 @@ var V = function(L) {
     mult_matrix: mult_matrix,
     translation_matrix: translation_matrix,
     scaling_matrix: scaling_matrix,
-    rotation_matrix: rotation_matrix
+    rotation_matrix: rotation_matrix,
+    angle_vect: angle_vect
   }
 }(L);
