@@ -20,6 +20,7 @@ var fakeCtx = () => probe => { return {
         clientWidth: 400,
         clientHeight: 200
     },
+    resetTransform: () => {},
     beginPath: () => {},
     moveTo: (x,y) => { probe.startX = x; probe.startY = y; },
     lineTo: (x,y) => { probe.endX = x; probe.endY = y; },
@@ -160,7 +161,7 @@ describe('a sound picture system entails', function () {
     expect(P.edge2_frame(fram1).c).to.be.equal('[-2,3]');
 
   });
-  it('a coordinateMapper', function() {
+  it('a coordinateMapper, measuring pixels relative to the canvas origin', function() {
 
     var origin = V.make_vect(-3,1);
     var edge1 = V.make_vect(5,3);
@@ -175,6 +176,23 @@ describe('a sound picture system entails', function () {
 
     expect(mappedUnit.c).to.be.equal('[0,7]');
     expect(mappedTest.c).to.be.equal('[3,13]');
+
+  });
+  it('a relative coordinateMapper, measuring pixels relative to the frame origin', function() {
+
+    var origin = V.make_vect(-3,1);
+    var edge1 = V.make_vect(5,3);
+    var edge2 = V.make_vect(-2,3);
+    var fram1 = P.make_frame(origin, edge1, edge2);
+
+    var relCoordinateMapper = P.rel_frame_coord_map(fram1);
+    var unitVec = V.make_vect(1,1);
+    var testVec = V.make_vect(2,2);
+    var mappedUnit = relCoordinateMapper(unitVec);
+    var mappedTest = relCoordinateMapper(testVec);
+
+    expect(mappedUnit.c).to.be.equal('[3,6]');
+    expect(mappedTest.c).to.be.equal('[6,12]');
 
   });
   it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function() {
