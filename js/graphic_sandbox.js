@@ -85,20 +85,20 @@ var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 // image painter at work
 window.onload = function() {
     point(canvasWidth/2,canvasHeight/2);
-    var img = document.getElementById("scream");
+    var scream = document.getElementById("scream");
     var rogers = document.getElementById("rogers");
-    //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
-    //P.picture_painter(img)(quarterRightUp,true)(ctx);
-    //P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    P.beside(P.atop(P.diamond_painter,P.picture_painter(img)),P.shrink_to_upper_right(P.picture_painter(rogers)))(thirdQuarter)(ctx);
-    //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
-    //P.picture_painter(img)(secondQuarter,true)(ctx);
-    //P.picture_painter(img)(fourthQuarter,true)(ctx);
-    P.top_split(P.picture_painter(img),4)(fourthQuarter)(ctx)
-    P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx)
-    P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx)
-    P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx)
-    P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx)
+    //P.picture_painter(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
+    //P.picture_painter(scream)(quarterRightUp,true)(ctx);
+    //P.picture_painter(scream)(deg30ccwFrame,true)(ctx);
+    P.beside(P.atop(P.diamond_painter,P.picture_painter(scream)),P.shrink_to_upper_right(P.picture_painter(rogers)))(thirdQuarter)(ctx);
+    //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
+    //P.picture_painter(scream)(secondQuarter,true)(ctx);
+    //P.picture_painter(scream)(fourthQuarter,true)(ctx);
+    P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
+    P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
+    P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
+    P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
+    P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
 };
 
 //P.diamond_painter(quarterRightUp,true)(ctx);
