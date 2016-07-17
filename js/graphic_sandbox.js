@@ -86,10 +86,11 @@ var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 window.onload = function() {
     point(canvasWidth/2,canvasHeight/2);
     var img = document.getElementById("scream");
+    var rogers = document.getElementById("rogers");
     //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
     //P.picture_painter(img)(quarterRightUp,true)(ctx);
     //P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    //P.picture_painter(img)(thirdQuarter)(ctx);
+    P.beside(P.diamond_painter,P.picture_painter(rogers))(thirdQuarter)(ctx);
     //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(img)(secondQuarter,true)(ctx);
     //P.picture_painter(img)(fourthQuarter,true)(ctx);
