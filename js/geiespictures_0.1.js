@@ -30,6 +30,14 @@ var P = function(L, V) {
   var make_segment = (start, end) => L.ArrayToList([start, end]);
   var start_segment = segment => L.first(segment);
   var end_segment = segment => L.second(segment);
+  var transform_ctx = (ctx, matrix) => {
+    ctx.transform(matrix._11(),
+                  matrix._21(),
+                  matrix._12(),
+                  matrix._22(),
+                  matrix._13(),
+                  matrix._23());
+  };
 
   // painter(what)(where)(canvasContext)
   var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
@@ -191,6 +199,7 @@ var P = function(L, V) {
     frame_coord_map: frame_coord_map,
     rel_frame_coord_map: rel_frame_coord_map,
     make_segment: make_segment,
+    transform_ctx: transform_ctx,
     segments_painter: segments_painter,
     picture_painter: picture_painter,
     diamond_painter: diamond_painter,

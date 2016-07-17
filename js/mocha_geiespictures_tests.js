@@ -24,7 +24,15 @@ var fakeCtx = () => probe => { return {
     beginPath: () => {},
     moveTo: (x,y) => { probe.startX = x; probe.startY = y; },
     lineTo: (x,y) => { probe.endX = x; probe.endY = y; },
-    stroke: () => {}
+    stroke: () => {},
+    transform: (m11, m21, m12, m22, m13, m23) => {
+        probe._11 = m11;
+        probe._21 = m21;
+        probe._12 = m12;
+        probe._22 = m22;
+        probe._13 = m13;
+        probe._23 = m23;
+      }
     };
 };
 
@@ -138,7 +146,18 @@ describe('a sound picture system requires', function () {
     expect(Math.round(100*V.angle_vect(minusDeg60))).to.be.equal(-105);
     var deg120 = V.make_vect(-.5,.87);
     expect(Math.round(100*V.angle_vect(deg120))).to.be.equal(209);
-    });
+    
+    var testProbe = probe();
+    var fakeContext = fakeCtx()(testProbe);
+    var transfMatrix = V.transf_matrix(11,12,13,21,22,23,31,32,33);
+    P.transform_ctx(fakeContext, transfMatrix);
+    expect(testProbe._11).to.be.equal(11);
+    expect(testProbe._21).to.be.equal(21);
+    expect(testProbe._12).to.be.equal(12);
+    expect(testProbe._22).to.be.equal(22);
+    expect(testProbe._13).to.be.equal(13);
+    expect(testProbe._23).to.be.equal(23);
+  });
   it('definitions for fold left and right', function() {
 
     expect(L.fold((x,ys)=>x+ys,0,L.ArrayToList([1,3,5]))).to.be.equal(9);
