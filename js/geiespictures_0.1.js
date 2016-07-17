@@ -67,8 +67,8 @@ var P = function(L, V) {
   var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
     var newFrame = P.make_frame(mapper(origin),
-                                V.sub_vect(mapper(xAxe),mapper(origin)),
-                                V.sub_vect(mapper(yAxe),mapper(origin)));
+                                V.sub_vect(mapper(xAxis),mapper(origin)),
+                                V.sub_vect(mapper(yAxis),mapper(origin)));
     return painter(newFrame, paintFrame);
   }
   
