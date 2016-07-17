@@ -25,9 +25,10 @@ ctx.strokeStyle = '#ff0000';
 
 var point = (canvasX, canvasY) => {
     ctx.beginPath();
-    ctx.arc(canvasX, canvasY, 1, 0, 2 * Math.PI, true);
+    ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI, true);
     ctx.fill();
 }
+var point_vec = vector => point(V.xcor_vect(vector),V.ycor_vect(vector));
 
 var canvasWidth = ctx.canvas.clientWidth;
 var canvasHeight = ctx.canvas.clientHeight;
@@ -94,9 +95,13 @@ window.onload = function() {
     //P.picture_painter(img)(fourthQuarter,true)(ctx);
 };
 
-P.diamond_painter(quarterRightUp,true)(ctx);
-P.diamond_painter(secondQuarter,true)(ctx);
-P.flip_horiz(P.diamond_painter)(secondQuarter,true)(ctx);
-P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
-
-P.shrink_to_upper_right(P.diamond_painter)(quarterRightUp,true)(ctx,'red');
+//P.diamond_painter(quarterRightUp,true)(ctx);
+//P.diamond_painter(secondQuarter,true)(ctx);
+//P.flip_horiz(P.diamond_painter)(secondQuarter,true)(ctx);
+//P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
+//
+//P.shrink_to_upper_right(P.diamond_painter)(quarterRightUp,true)(ctx,'red');
+P.naked_frame(firstQuarter)(ctx);
+P.naked_frame(quarterRightUp)(ctx);
+P.beside(P.diamond_painter)(quarterRightUp,true)(ctx,'green');
+var mapper = P.frame_coord_map(quarterRightUp);

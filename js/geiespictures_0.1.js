@@ -20,12 +20,6 @@ var P = function(L, V) {
                                        V.xcor_vect(vector)),
                           V.scale_vect(edge2_frame(frame),
                                        V.ycor_vect(vector))));
-  // canvas pixels relative to center of frame
-  var rel_frame_coord_map = frame => vector =>
-    V.add_vect(V.scale_vect(edge1_frame(frame),
-                           V.xcor_vect(vector)),
-              V.scale_vect(edge2_frame(frame),
-                           V.ycor_vect(vector)));
 
   var make_segment = (start, end) => L.ArrayToList([start, end]);
   var start_segment = segment => L.first(segment);
@@ -67,12 +61,34 @@ var P = function(L, V) {
   var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
     var newFrame = P.make_frame(mapper(origin),
-                                V.sub_vect(mapper(xAxis),mapper(origin)),
-                                V.sub_vect(mapper(yAxis),mapper(origin)));
+                                V.sub_vect(mapper(xAxis), mapper(origin)),
+                                V.sub_vect(mapper(yAxis), mapper(origin)));
     return painter(newFrame, paintFrame);
   }
   
-  var beside = (p1, p2) => {};
+  var beside = painter => (frame, paintFrame) => {
+    var mapper = frame_coord_map(frame);
+    var halfWay = mapper(V.make_vect(0.5,0));
+//    var leftHalfFrame = P.make_frame(origin_frame(frame),
+//                                     halfWay,
+//                                     edge2_frame(frame));
+    var leftHalfFrame = P.make_frame(mapper(V.make_vect(0,0)),
+                                     V.sub_vect(mapper(V.make_vect(0.5,0)),mapper(V.make_vect(0,0))),
+                                     V.sub_vect(mapper(V.make_vect(0,1)),mapper(V.make_vect(0,0))));
+//    var rightHalfFrame = P.make_frame(halfWay,
+//                                      halfWay,
+//                                      mapper(V.make_vect(0,1)));
+    var rightHalfFrame = P.make_frame(mapper(V.make_vect(0.5,0)),
+                                     V.sub_vect(mapper(V.make_vect(1,0)),mapper(V.make_vect(0.5,0))),
+                                     V.sub_vect(mapper(V.make_vect(0.5,1)),mapper(V.make_vect(0.5,0))));
+    return (ctx, color) => {
+      painter(leftHalfFrame, paintFrame)(ctx, color);
+      painter(rightHalfFrame, paintFrame)(ctx, color);
+    };
+  };
+  var origin_frame = frame => L.first(frame);
+  var edge1_frame = frame => L.second(frame);
+  var edge2_frame = frame => L.third(frame);
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
@@ -107,6 +123,8 @@ var P = function(L, V) {
     segments_painter(frameAxes)(frame)(ctx, color);
   };
 
+  var naked_frame = frame => segments_painter([])(frame,true);
+  
   var diamond_painter = (frame, paintFrame) => (ctx, color) => {
     var diamondPieces =
       [
@@ -129,7 +147,7 @@ var P = function(L, V) {
     segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
   };
 
-  var picture_painter = img => (frame, paintFrame) => (ctx) => {
+  var picture_painter = img => (frame, paintFrame) => ctx => {
     ctx.resetTransform();
 
     var imgWidth = img.width;
@@ -171,14 +189,15 @@ var P = function(L, V) {
     edge1_frame: edge1_frame,
     edge2_frame: edge2_frame,
     frame_coord_map: frame_coord_map,
-    rel_frame_coord_map: rel_frame_coord_map,
     make_segment: make_segment,
     transform_ctx: transform_ctx,
     segments_painter: segments_painter,
     picture_painter: picture_painter,
+    naked_frame: naked_frame,
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
     flip_horiz: flip_horiz,
-    shrink_to_upper_right: shrink_to_upper_right
+    shrink_to_upper_right: shrink_to_upper_right,
+    beside: beside
   };
 }(L, V);
