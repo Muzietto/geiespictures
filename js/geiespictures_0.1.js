@@ -64,7 +64,7 @@ var P = function(L, V) {
     segments.forEach(draw_segment);
   }
 
-  var transform_painter = (painter, origin, xAxe, yAxe) => (frame, paintFrame) => {
+  var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
     var mapper = frame_coord_map(frame);
     var newFrame = P.make_frame(mapper(origin),
                                 V.sub_vect(mapper(xAxe),mapper(origin)),
