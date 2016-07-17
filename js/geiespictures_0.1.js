@@ -75,6 +75,15 @@ var P = function(L, V) {
     };
   };
 
+  var atop = (p1, p2) => {
+    var topPainter = transform_painter(p1, V.make_vect(0,.5), V.make_vect(1,.5), V.make_vect(0,1));
+    var bottomPainter = transform_painter(p2, V.make_vect(0,0), V.make_vect(1,0), V.make_vect(0,.5));
+    return (frame, paintFrame) => (ctx, color) => {
+      topPainter(frame, paintFrame)(ctx,color);
+      bottomPainter(frame, paintFrame)(ctx,color);
+    };
+  };
+
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
                                                V.make_vect(1,1), // new END of xAxe in old frame coords
@@ -183,6 +192,7 @@ var P = function(L, V) {
     flip_vert: flip_vert,
     flip_horiz: flip_horiz,
     shrink_to_upper_right: shrink_to_upper_right,
-    beside: beside
+    beside: beside,
+    atop: atop
   };
 }(L, V);
