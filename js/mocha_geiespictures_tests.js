@@ -76,6 +76,17 @@ describe('a sound picture system requires', function () {
     expect(xy._32()).to.be.equal(222);
     expect(xy._33()).to.be.equal(246);
 
+    var x_plus_y = V.add_matrix(x,y);
+    expect(x_plus_y._11()).to.be.equal(6);
+    expect(x_plus_y._12()).to.be.equal(8);
+    expect(x_plus_y._13()).to.be.equal(10);
+    expect(x_plus_y._21()).to.be.equal(12);
+    expect(x_plus_y._22()).to.be.equal(14);
+    expect(x_plus_y._23()).to.be.equal(16);
+    expect(x_plus_y._31()).to.be.equal(18);
+    expect(x_plus_y._32()).to.be.equal(20);
+    expect(x_plus_y._33()).to.be.equal(22);
+
     var translated = V.translation_matrix(2,5);
     expect(translated._11()).to.be.equal(1);
     expect(translated._12()).to.be.equal(0);

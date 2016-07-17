@@ -19,6 +19,17 @@ var V = function(L) {
       _33: () => m33
     };
   };
+  var add_matrix = (m1, m2) => transf_matrix(    
+    m1._11() + m2._11(), // _11
+    m1._12() + m2._12(), // _12
+    m1._13() + m2._13(), // _13
+    m1._21() + m2._21(), // _21
+    m1._22() + m2._22(), // _22
+    m1._23() + m2._23(), // _23
+    m1._31() + m2._31(), // _31
+    m1._32() + m2._32(), // _32
+    m1._33() + m2._33()  // _33
+  );
   var mult_matrix = (m1, m2) => transf_matrix(
     m1._11()*m2._11() + m1._12()*m2._21() + m1._13()*m2._31(), // _11
     m1._11()*m2._12() + m1._12()*m2._22() + m1._13()*m2._32(), // _12
@@ -54,6 +65,7 @@ var V = function(L) {
     sub_vect: sub_vect,
     scale_vect: scale_vect,
     transf_matrix: transf_matrix,
+    add_matrix: add_matrix,
     mult_matrix: mult_matrix,
     translation_matrix: translation_matrix,
     scaling_matrix: scaling_matrix,
