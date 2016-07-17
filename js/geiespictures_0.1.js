@@ -108,7 +108,8 @@ var P = function(L, V) {
     if (n === 0) {
       return painter;
     } else {
-      return besi
+      return beside(atop(top_split(painter,n-1),painter),
+                    atop(corner_split(painter,n-1),right_split(painter,n-1)));
     }
   };
 

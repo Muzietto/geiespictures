@@ -94,8 +94,11 @@ window.onload = function() {
     //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(img)(secondQuarter,true)(ctx);
     //P.picture_painter(img)(fourthQuarter,true)(ctx);
-    P.right_split(P.picture_painter(rogers),4)(firstQuarter)(ctx)
     P.top_split(P.picture_painter(img),4)(fourthQuarter)(ctx)
+    P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx)
+    P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx)
+    P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx)
+    P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx)
 };
 
 //P.diamond_painter(quarterRightUp,true)(ctx);
