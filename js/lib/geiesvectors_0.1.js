@@ -2,7 +2,7 @@ var V = function(L) {
   var make_vect = (x, y) => L.ArrayToList([x, y]);
   var xcor_vect = L.first;
   var ycor_vect = L.second;
-  var length_vect = v => Math.sqrt(Math.pow(xcor_vect(v),2) + Math.pow(ycor_vect(v),2))
+  var length_vect = v => Math.sqrt(Math.pow(xcor_vect(v),2) + Math.pow(ycor_vect(v),2));
   var add_vect = (v1, v2) => make_vect(xcor_vect(v1) + xcor_vect(v2), ycor_vect(v1) + ycor_vect(v2));
   var sub_vect = (v1, v2) => make_vect(xcor_vect(v1) - xcor_vect(v2), ycor_vect(v1) - ycor_vect(v2));
   var scale_vect = (v, s) => make_vect(s * xcor_vect(v), s * ycor_vect(v));
@@ -71,5 +71,5 @@ var V = function(L) {
     scaling_matrix: scaling_matrix,
     rotation_matrix: rotation_matrix,
     angle_vect: angle_vect
-  }
+  };
 }(L);
