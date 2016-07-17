@@ -65,30 +65,15 @@ var P = function(L, V) {
                                 V.sub_vect(mapper(yAxis), mapper(origin)));
     return painter(newFrame, paintFrame);
   }
-  
-  var beside = painter => (frame, paintFrame) => {
-    var mapper = frame_coord_map(frame);
-    var halfWay = mapper(V.make_vect(0.5,0));
-//    var leftHalfFrame = P.make_frame(origin_frame(frame),
-//                                     halfWay,
-//                                     edge2_frame(frame));
-    var leftHalfFrame = P.make_frame(mapper(V.make_vect(0,0)),
-                                     V.sub_vect(mapper(V.make_vect(0.5,0)),mapper(V.make_vect(0,0))),
-                                     V.sub_vect(mapper(V.make_vect(0,1)),mapper(V.make_vect(0,0))));
-//    var rightHalfFrame = P.make_frame(halfWay,
-//                                      halfWay,
-//                                      mapper(V.make_vect(0,1)));
-    var rightHalfFrame = P.make_frame(mapper(V.make_vect(0.5,0)),
-                                     V.sub_vect(mapper(V.make_vect(1,0)),mapper(V.make_vect(0.5,0))),
-                                     V.sub_vect(mapper(V.make_vect(0.5,1)),mapper(V.make_vect(0.5,0))));
-    return (ctx, color) => {
-      painter(leftHalfFrame, paintFrame)(ctx, color);
-      painter(rightHalfFrame, paintFrame)(ctx, color);
+
+  var beside = (p1, p2) => {
+    var leftPainter = transform_painter(p1, V.make_vect(0,0), V.make_vect(0.5,0), V.make_vect(0,1));
+    var rightPainter = transform_painter(p2, V.make_vect(0.5,0), V.make_vect(1,0), V.make_vect(0.5,1));
+    return (frame, paintFrame) => (ctx, color) => {
+      leftPainter(frame, paintFrame)(ctx,color);
+      rightPainter(frame, paintFrame)(ctx,color);
     };
   };
-  var origin_frame = frame => L.first(frame);
-  var edge1_frame = frame => L.second(frame);
-  var edge2_frame = frame => L.third(frame);
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin

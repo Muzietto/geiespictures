@@ -102,6 +102,10 @@ window.onload = function() {
 //
 //P.shrink_to_upper_right(P.diamond_painter)(quarterRightUp,true)(ctx,'red');
 P.naked_frame(firstQuarter)(ctx);
+P.beside(P.flip_vert(P.beside(P.diamond_painter,
+                              P.segments_painter([oneThirdToTwoThirds]))),
+         P.beside(P.segments_painter([oneThirdToTwoThirds]),
+                  P.diamond_painter))
+        (firstQuarter,true)(ctx,'red');
 P.naked_frame(quarterRightUp)(ctx);
-P.beside(P.diamond_painter)(quarterRightUp,true)(ctx,'green');
-var mapper = P.frame_coord_map(quarterRightUp);
+P.beside(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(quarterRightUp,true)(ctx,'green');
