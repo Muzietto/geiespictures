@@ -27,7 +27,7 @@ window.onload = function() {
     var rogers = document.getElementById("rogers");
     //P.corner_split(P.picture_painter(rogers),4)(wholeCanvas)(ctx);
     
-    P.centered(P.picture_painter(scream));
+    //P.centered(P.picture_painter(scream))(wholeCanvas)(ctx);
 
-    //P.tree1(P.picture_painter(rogers),4)(wholeCanvas)(ctx);
+    P.tree1(P.picture_painter(scream),8)(wholeCanvas)(ctx);
 };

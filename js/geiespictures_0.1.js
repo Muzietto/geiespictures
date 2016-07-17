@@ -112,6 +112,20 @@ var P = function(L, V) {
                     atop(corner_split(painter,n-1),right_split(painter,n-1)));
     }
   };
+  
+  var centered = painter => transform_painter(painter,
+                                              V.make_vect(.25,0),
+                                              V.make_vect(.75,0),
+                                              V.make_vect(0,1));
+
+  var tree1 = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      var next = tree1(painter, n-1)
+      return atop(beside(next,next),centered(painter));
+    }
+  };
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
@@ -225,6 +239,8 @@ var P = function(L, V) {
     atop: atop,
     right_split: right_split,
     top_split: top_split,
-    corner_split: corner_split
+    corner_split: corner_split,
+    centered: centered,
+    tree1: tree1
   };
 }(L, V);
