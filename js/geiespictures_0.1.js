@@ -68,52 +68,24 @@ var P = function(L, V) {
     var mapper = frame_coord_map(frame);
     var newFrame = P.make_frame(mapper(origin),
                                 V.sub_vect(mapper(xAxe),mapper(origin)),
-                                V.sub_vect(mapper(yAxe),mapper(origin)))
+                                V.sub_vect(mapper(yAxe),mapper(origin)));
     return painter(newFrame, paintFrame);
   }
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
-                                               V.make_vect(1,1), // new END of xAxe
-                                               V.make_vect(0,0));// new END of yAxe
+                                               V.make_vect(1,1), // new END of xAxe in old frame coords
+                                               V.make_vect(0,0));// new END of yAxe in old frame coords
 
   var flip_horiz = painter => transform_painter(painter,
                                                V.make_vect(1,0), // new origin
                                                V.make_vect(0,0), // new END of xAxe
                                                V.make_vect(1,1));// new END of yAxe
 
-  var shrink_to_upper_right_naive = painter => (frame, paintFrame) => {
-    var mapper = frame_coord_map(frame);
-    var newOrigin = V.make_vect(.5,.5); // new origin
-    var newXAxis = V.make_vect(.5,0);  // new xAxe
-    var newYAxis = V.make_vect(0,.5); // new yAxe
-    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
-                              mapper(newXAxis),
-                              mapper(newYAxis));
-    return painter(newFrame, paintFrame);
-  }
-
-  var flip_vert_naive = painter => (frame, paintFrame) => {
-    var mapper = frame_coord_map(frame);
-    var newOrigin = V.make_vect(0,1); // new origin
-    var newXAxis = V.make_vect(1,0);  // new xAxe
-    var newYAxis = V.make_vect(0,-1); // new yAxe
-    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
-                              mapper(newXAxis),
-                              mapper(newYAxis));
-    return painter(newFrame, paintFrame);
-  }
-
-  var flip_horiz_naive = painter => (frame, paintFrame) => {
-    var newOrigin = V.make_vect(1,0);
-    var newXSide = V.make_vect(-1,0);
-    var newYSide = V.make_vect(0,1);
-    var mapper = frame_coord_map(frame);
-    var newFrame = make_frame(V.add_vect(origin_frame(frame),mapper(newOrigin)),
-                              mapper(newXSide),
-                              mapper(newYSide));
-    return painter(newFrame, paintFrame);
-  }
+  var shrink_to_upper_right = painter => transform_painter(painter,
+                                               V.make_vect(.5,.5), // new origin
+                                               V.make_vect(1,.5), // new END of xAxe in old frame coords
+                                               V.make_vect(.5,1));// new END of yAxe in old frame coords
 
   // paints also rotated/skewed frames
   var frame_painter = (frame, ctx, color) => {
@@ -205,8 +177,6 @@ var P = function(L, V) {
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
     flip_horiz: flip_horiz,
-    flip_vert_naive: flip_vert_naive,
-    flip_horiz_naive: flip_horiz_naive,
-    shrink_to_upper_right_naive: shrink_to_upper_right_naive
+    shrink_to_upper_right: shrink_to_upper_right
   }
 }(L, V);

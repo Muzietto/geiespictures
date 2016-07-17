@@ -86,17 +86,17 @@ window.onload = function() {
     point(canvasWidth/2,canvasHeight/2);
     var img = document.getElementById("scream");
     //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
-    P.picture_painter(img)(quarterRightUp,true)(ctx);
-    P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    P.picture_painter(img)(thirdQuarter)(ctx);
+    //P.picture_painter(img)(quarterRightUp,true)(ctx);
+    //P.picture_painter(img)(deg30ccwFrame,true)(ctx);
+    //P.picture_painter(img)(thirdQuarter)(ctx);
     //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(img)(secondQuarter,true)(ctx);
     //P.picture_painter(img)(fourthQuarter,true)(ctx);
 };
 
 P.diamond_painter(quarterRightUp,true)(ctx);
-//P.diamond_painter(secondQuarter,true)(ctx);
-P.flip_horiz_naive(P.diamond_painter)(secondQuarter,true)(ctx);
-
+P.diamond_painter(secondQuarter,true)(ctx);
+P.flip_horiz(P.diamond_painter)(secondQuarter,true)(ctx);
 P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
-P.flip_vert_naive(P.diamond_painter)(quarterLeftUpFromOrigin,true)(ctx);
+
+P.shrink_to_upper_right(P.diamond_painter)(quarterRightUp,true)(ctx,'red');
