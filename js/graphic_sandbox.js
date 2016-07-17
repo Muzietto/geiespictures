@@ -90,10 +90,11 @@ window.onload = function() {
     //P.picture_painter(img)(quarterRightSkewedDownUpSkewed,true)(ctx);
     //P.picture_painter(img)(quarterRightUp,true)(ctx);
     //P.picture_painter(img)(deg30ccwFrame,true)(ctx);
-    P.beside(P.atop(P.diamond_painter,P.picture_painter(img)),P.picture_painter(rogers))(thirdQuarter)(ctx);
+    P.beside(P.atop(P.diamond_painter,P.picture_painter(img)),P.shrink_to_upper_right(P.picture_painter(rogers)))(thirdQuarter)(ctx);
     //P.picture_painter(img)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(img)(secondQuarter,true)(ctx);
     //P.picture_painter(img)(fourthQuarter,true)(ctx);
+    P.right_split(P.picture_painter(rogers),4)(firstQuarter)(ctx)
 };
 
 //P.diamond_painter(quarterRightUp,true)(ctx);
@@ -108,6 +109,6 @@ P.naked_frame(firstQuarter)(ctx);
 //         P.beside(P.segments_painter([oneThirdToTwoThirds]),
 //                  P.diamond_painter))
 //        (firstQuarter,true)(ctx,'red');
-P.atop(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(firstQuarter,true)(ctx,'red');
+P.atop(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(secondQuarter,true)(ctx,'red');
 P.naked_frame(quarterRightUp)(ctx);
 P.beside(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(quarterRightUp,true)(ctx,'green');

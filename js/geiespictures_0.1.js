@@ -83,6 +83,16 @@ var P = function(L, V) {
       bottomPainter(frame, paintFrame)(ctx,color);
     };
   };
+  
+  var right_split = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      var smaller = right_split(painter, n-1);
+      return beside(painter, atop(smaller, smaller));
+      //return beside(painter, right_split(painter, n-1));
+    }
+  }
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
@@ -193,6 +203,7 @@ var P = function(L, V) {
     flip_horiz: flip_horiz,
     shrink_to_upper_right: shrink_to_upper_right,
     beside: beside,
-    atop: atop
+    atop: atop,
+    right_split: right_split
   };
 }(L, V);
