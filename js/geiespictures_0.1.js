@@ -71,6 +71,8 @@ var P = function(L, V) {
                                 V.sub_vect(mapper(yAxe),mapper(origin)));
     return painter(newFrame, paintFrame);
   }
+  
+  var beside = (p1, p2) => {};
 
   var flip_vert = painter => transform_painter(painter,
                                                V.make_vect(0,1), // new origin
@@ -103,7 +105,7 @@ var P = function(L, V) {
         make_segment(V.make_vect(.08,.98),V.make_vect(.1,.95))  // y
       ];
     segments_painter(frameAxes)(frame)(ctx, color);
-  }
+  };
 
   var diamond_painter = (frame, paintFrame) => (ctx, color) => {
     var diamondPieces =
@@ -125,7 +127,7 @@ var P = function(L, V) {
         make_segment(V.make_vect(.5,.5),V.make_vect(1,1))
       ];
     segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
-  }
+  };
 
   var picture_painter = img => (frame, paintFrame) => (ctx) => {
     ctx.resetTransform();
@@ -161,7 +163,7 @@ var P = function(L, V) {
     ctx.drawImage(img,0,0);
     ctx.resetTransform();
     if (paintFrame) frame_painter(frame, ctx);
-  }
+  };
 
   return {
     make_frame: make_frame,
@@ -178,5 +180,5 @@ var P = function(L, V) {
     flip_vert: flip_vert,
     flip_horiz: flip_horiz,
     shrink_to_upper_right: shrink_to_upper_right
-  }
+  };
 }(L, V);
