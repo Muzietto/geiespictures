@@ -2,4 +2,4 @@
 
 The picture language from chapter 2 of SICP
 
-![alt image](/img/canvas.jpg)
+![alt image](/img/sandboxes.jpg)
