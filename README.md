@@ -4,7 +4,7 @@ The [picture language](https://mitpress.mit.edu/sicp/full-text/sicp/book/node36.
 
 - the picture language
 - sets && balanced trees
-- Huffman trees
+- the Huffman trees
 - digital circuits simulator (upcoming)
 - constraints' propagation (upcoming)
 
