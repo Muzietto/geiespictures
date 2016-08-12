@@ -149,10 +149,12 @@ var geiessicp = S = function(L) {
     };
   }
 
+  // chapter 3 - constraints evaluator
   function _applier(name, op, rev1_op, rev2_op) {
-    rev2_op = rev2_op || rev1_op
+    rev2_op = rev2_op || rev1_op;
     return function(va, vb, vresult) {
-      if (arguments.length < 2) throw new Error(name + ' - initialisation error');
+      var args = [].slice.apply(arguments);
+      if (args.length < 2) throw new Error(name + ' - initialisation error');
       _apply();
       var result = {
         apply: _apply,
@@ -170,7 +172,8 @@ var geiessicp = S = function(L) {
       }
 
       function _apply() {
-        if (va.read() !== null && vb.read() !== null && vresult.read() !== null) return;
+        // avoid stack overflow
+        if (args.reduce((acc, v) => (v.read() !== null) ? acc + 1 : acc, 0) === 3) return;
         var maybeRes = maybe(va.read()).bind(a => maybe(vb.read()).bind(b => maybe(op(a, b))));
         var maybeVb = maybe(vresult.read()).bind(sum => maybe(va.read()).bind(a => maybe(rev1_op(sum, a))));
         var maybeVa = maybe(vresult.read()).bind(sum => maybe(vb.read()).bind(b => maybe(rev2_op(sum, b))));
@@ -181,7 +184,6 @@ var geiessicp = S = function(L) {
     };
   }
 
-  // chapter 3 - constraints evaluator
   var _value = name => {
     var _value = null;
     var _operators = [];
@@ -193,6 +195,7 @@ var geiessicp = S = function(L) {
       return value; // needed to make the maybe work
     }
     var _unset = () => {
+      // avoid stack overflow
       if (_value === null) return;
       _value = null;
       _log();
