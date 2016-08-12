@@ -197,5 +197,28 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         expect(console.log.test()).to.be.equal('va - current value is 0.5');
       });
     });
+
+    // P = 2 * (C -32)
+    describe('a more complex expression', function() {
+      var C = S.value('C');
+      var P = S.value('P');
+      var vallo = S.value('vallo');
+      var cMin32 = S.sum(C, S.constant(-32), vallo);
+      var pHalf = S.product(P, S.constant(0.5), vallo);
+
+      it('can be set and unset from any of its own free values', function() {
+        C.set(34);
+        expect(vallo.read()).to.be.equal(2);
+        expect(P.read()).to.be.equal(4);
+
+        P.unset();
+        expect(vallo.read()).to.be.null;
+        expect(C.read()).to.be.null;
+
+        P.set(4);
+        expect(vallo.read()).to.be.equal(2);
+        expect(C.read()).to.be.equal(34);
+      });
+    });
   });
 });
