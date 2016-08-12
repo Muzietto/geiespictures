@@ -154,15 +154,27 @@ var geiessicp = S = function(L) {
     return function(va, vb, vresult) {
       if (arguments.length < 2) throw new Error(name + ' - initialisation error');
       _apply();
-      return {
-        apply: _apply
+      var result = {
+        apply: _apply,
+        unset: _unset
       };
+      va.link(result);
+      vb.link(result);
+      vresult.link(result);
+      return result;
+
+      function _unset() {
+        va.unset();
+        vb.unset();
+        vresult.unset();
+      }
 
       function _apply() {
+        if (va.read() !== null && vb.read() !== null && vresult.read() !== null) return;
         var maybeRes = maybe(va.read()).bind(a => maybe(vb.read()).bind(b => maybe(op(a, b))));
         var maybeVb = maybe(vresult.read()).bind(sum => maybe(va.read()).bind(a => maybe(rev1_op(sum, a))));
         var maybeVa = maybe(vresult.read()).bind(sum => maybe(vb.read()).bind(b => maybe(rev2_op(sum, b))));
-        return maybe(vresult.maybeSet(maybeRes))
+        maybe(vresult.maybeSet(maybeRes))
           .orElse(maybe(vb.maybeSet(maybeVb)))
           .orElse(maybe(va.maybeSet(maybeVa)))
       }
@@ -181,8 +193,10 @@ var geiessicp = S = function(L) {
       return value; // needed to make the maybe work
     }
     var _unset = () => {
+      if (_value === null) return;
       _value = null;
       _log();
+      _operators.forEach(function(op) { op.unset(); });
     }
     var _log = () => console.log(name + ' - current value is ' + _value);
     var _link = operator => {
@@ -192,7 +206,7 @@ var geiessicp = S = function(L) {
     return {
       name: () => name,
       set: _set,
-      maybeSet: maybe => !maybe.isNone() ? _set(maybe.get()) : null,
+      maybeSet: maybe => maybe.isSome() ? _set(maybe.get()) : null,
       unset: _unset,
       link: _link,
       read: () => JSON.parse(JSON.stringify(_value))
@@ -204,20 +218,22 @@ var geiessicp = S = function(L) {
     return {
       name: () => {},
       set: () => {},
+      unset: () => {},
       maybeSet: () => null,
-      read: () => JSON.parse(JSON.stringify(value))
+      read: () => JSON.parse(JSON.stringify(value)),
+      link: () => {}
     };
   }
 
   function maybe(value) {
-    if (typeof value === 'undefined') throw new Error('maybe values cannot be undefined');    
+    if (typeof value === 'undefined') throw new Error('maybe values cannot be undefined');
     var _bind = famb => (value !== null) ? famb(value) : maybe(null);
     var _get = () => value;
     var _orElse = mb => (value !== null) ? maybe(value) : mb;
     return {
       bind: _bind,
       get: _get,
-      isNone: () => (value === null),
+      isSome: () => (value !== null),
       orElse: _orElse
     };
   }

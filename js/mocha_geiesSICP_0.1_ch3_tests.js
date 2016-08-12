@@ -40,14 +40,12 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         var test = S.value('test');
         expect(test.read()).to.be.null;
       });
-
       it('may have a name or not', function() {
         var test = S.value('test');
         expect(test.name()).to.be.equal('test');
         var noname = S.value();
         expect(noname.name()).to.be.undefined;
       });
-
       it('is mutable', function() {
         var test = S.value('test');
         expect(test.read()).to.be.null;
@@ -71,22 +69,16 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         test.set(123);
         expect(console.log.test()).to.be.equal('test - current value is 123,got a broadcast signal');
       });
-      it('', function() {
-
-      });
     });
     describe('a constant', function () {
-
       it('requires an initialisation value', function() {
         expect(function() { return S.constant(); }).to.throw;
         expect(function() { return S.constant(123); }).to.not.throw;
       });
-
       it('has no name', function() {
         var PI = S.constant(Math.PI);
         expect(PI.name()).to.be.undefined;
       });
-
       it('is not mutable', function() {
         var PI = S.constant(Math.PI);
         expect(PI.read()).to.be.equal(Math.PI);
@@ -102,35 +94,51 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         expect(function() { return S.sum('1','2'); }).to.throw;
         expect(function() { return S.sum('1','2','3'); }).to.not.throw;
       });
-
       it('tries to resolve constraints at construction by computing sum', function() {
         var result = S.value('result');
         var tredici = S.sum(S.constant(1), S.constant(12), result);
         expect(console.log.test()).to.be.equal('result - current value is 13');
       });
-
       it('tries to resolve constraints at construction by computing vb', function() {
         var vb = S.value('vb');
         var undici = S.sum(S.constant(1), vb, S.constant(12));
         expect(console.log.test()).to.be.equal('vb - current value is 11');
       });
-
       it('tries to resolve constraints at construction by computing vb', function() {
         var vb = S.value('vb');
         var minUndici = S.sum(S.constant(12), vb, S.constant(1));
         expect(console.log.test()).to.be.equal('vb - current value is -11');
       });
-
       it('tries to resolve constraints at construction by computing va', function() {
         var va = S.value('va');
         var undici = S.sum(va, S.constant(1), S.constant(12));
         expect(console.log.test()).to.be.equal('va - current value is 11');
       });
-
       it('tries to resolve constraints at construction by computing va', function() {
         var va = S.value('va');
         var minUndici = S.sum(va, S.constant(12), S.constant(1));
         expect(console.log.test()).to.be.equal('va - current value is -11');
+      });
+      it('reacts to broadcast messages from its own values', function() {
+        var va = S.value('va');
+        var summ = S.value('summ');
+        var plus1 = S.sum(va, S.constant(1), summ);
+
+        va.set(1);
+        expect(summ.read()).to.be.equal(2);
+        expect(console.log.test()).to.contain('va - current value is 1,summ - current value is 2');
+
+        va.unset();
+        expect(summ.read()).to.be.null;
+        expect(console.log.test()).to.contain('va - current value is null,summ - current value is null');
+
+        summ.set(10);
+        expect(va.read()).to.be.equal(9);
+        expect(console.log.test()).to.contain('summ - current value is 10,va - current value is 9');
+
+        summ.unset();
+        expect(va.read()).to.be.null;
+        expect(console.log.test()).to.be.equal('va - current value is 1,summ - current value is 2,va - current value is null,summ - current value is null,summ - current value is 10,va - current value is 9,summ - current value is null,va - current value is null');
       });
     });
 
@@ -140,25 +148,21 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         var ventiquattro = S.product(S.constant(2), S.constant(12), result);
         expect(console.log.test()).to.be.equal('result - current value is 24');
       });
-
       it('tries to resolve constraints at construction by computing vb', function() {
         var vb = S.value('vb');
         var due = S.product(S.constant(2), vb, S.constant(4));
         expect(console.log.test()).to.be.equal('vb - current value is 2');
       });
-
       it('tries to resolve constraints at construction by computing vb', function() {
         var vb = S.value('vb');
         var unMezzo = S.product(S.constant(4), vb, S.constant(2));
         expect(console.log.test()).to.be.equal('vb - current value is 0.5');
       });
-
       it('tries to resolve constraints at construction by computing va', function() {
         var va = S.value('va');
         var due = S.product(va, S.constant(2), S.constant(4));
         expect(console.log.test()).to.be.equal('va - current value is 2');
       });
-
       it('tries to resolve constraints at construction by computing va', function() {
         var va = S.value('va');
         var unMezzo = S.product(va, S.constant(4), S.constant(2));
@@ -172,25 +176,21 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         var otto = S.power(S.constant(2), S.constant(3), result);
         expect(console.log.test()).to.be.equal('result - current value is 8');
       });
-
       it('tries to resolve constraints at construction by computing vb (logarithm)', function() {
         var vb = S.value('vb');
         var three = S.power(S.constant(2), vb, S.constant(8));
         expect(console.log.test()).to.be.equal('vb - current value is 3');
       });
-
       it('tries to resolve constraints at construction by computing vb (logarithm)', function() {
         var vb = S.value('vb');
         var unMezzo = S.power(S.constant(4), vb, S.constant(2));
         expect(console.log.test()).to.be.equal('vb - current value is 0.5');
       });
-
       it('tries to resolve constraints at construction by computing va (base)', function() {
         var va = S.value('va');
         var due = S.power(va, S.constant(3), S.constant(8));
         expect(console.log.test()).to.be.equal('va - current value is 2');
       });
-
       it('tries to resolve constraints at construction by computing va (base)', function() {
         var va = S.value('va');
         var unMezzo = S.power(va, S.constant(3), S.constant(1/8));
