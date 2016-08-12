@@ -174,6 +174,8 @@ var geiessicp = S = function(L) {
       function _apply() {
         // avoid stack overflow
         if (args.reduce((acc, v) => (v.read() !== null) ? acc + 1 : acc, 0) === 3) return;
+        // skip when two values null
+        if (args.reduce((acc, v) => v.read() === null ? acc + 1 : acc, 0) > 1) return;
         var maybeRes = maybe(va.read()).bind(a => maybe(vb.read()).bind(b => maybe(op(a, b))));
         var maybeVb = maybe(vresult.read()).bind(sum => maybe(va.read()).bind(a => maybe(rev1_op(sum, a))));
         var maybeVa = maybe(vresult.read()).bind(sum => maybe(vb.read()).bind(b => maybe(rev2_op(sum, b))));

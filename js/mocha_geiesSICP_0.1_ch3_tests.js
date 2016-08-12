@@ -220,5 +220,47 @@ describe('Implementing SICP chapter 3 brings to the implementation of', function
         expect(C.read()).to.be.equal(34);
       });
     });
+
+    // P = (2 * (C -32))^(E + 1)
+    describe('a multivariable system', function() {
+      var C = S.value('C');
+      var P = S.value('P');
+      var E = S.value('E');
+      var cMin32Val = S.value('cMin32Val');
+      var ePlus1Val = S.value('ePlus1Val');
+      var cMin32Times2Val = S.value('cMin32Times2Val');
+      var cMin32 = S.sum(C, S.constant(-32), cMin32Val);
+      var ePlus1 = S.sum(E, S.constant(1), ePlus1Val);
+      var cMin32Times2 = S.product(cMin32Val, S.constant(2), cMin32Times2Val);
+      var thePower = S.power(cMin32Times2Val, ePlus1Val, P);
+
+      it('can be set and unset from any of its own free values', function() {
+        C.set(34);
+        expect(cMin32Val.read()).to.be.equal(2);
+        expect(cMin32Times2Val.read()).to.be.equal(4);
+        expect(P.read()).to.be.null;
+
+        E.set(1);
+        expect(ePlus1Val.read()).to.be.equal(2);
+        expect(P.read()).to.be.equal(16);
+
+        P.unset();
+        expect(cMin32Val.read()).to.be.null;
+        expect(cMin32Times2Val.read()).to.be.null;
+        expect(C.read()).to.be.null;
+        expect(ePlus1Val.read()).to.be.null;
+        expect(E.read()).to.be.null;
+
+        P.set(16);
+        expect(cMin32Times2Val.read()).to.be.null;
+        expect(ePlus1Val.read()).to.be.null;
+
+        C.set(34);
+        expect(cMin32Val.read()).to.be.equal(2);
+        expect(cMin32Times2Val.read()).to.be.equal(4);
+        expect(ePlus1Val.read()).to.be.equal(2);
+        expect(E.read()).to.be.equal(1);
+      });
+    });
   });
 });
