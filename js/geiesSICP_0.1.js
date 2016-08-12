@@ -8,11 +8,11 @@
 	The MIT License - Copyright (c) 2016 GeiesSICP Project
 */
 var geiessicp = S = function(L) {
-  
+
   var nil = L.nil;
   var isEmpty = L.isEmpty;
 
-  // sets
+  // chapter 2 - sets
   function make_tree(entry, left, right) { return L.ArrayToList([entry,left,right]); }
 
   var entry = L.first;
@@ -79,7 +79,7 @@ var geiessicp = S = function(L) {
     }
   }
 
-  // Huffman trees
+  // chapter 2 - Huffman trees
   function decodeH (encoded,tree) {
     var symbols = L.first;
     var weight = L.second;
@@ -149,20 +149,98 @@ var geiessicp = S = function(L) {
     };
   }
 
+  function _applier(name, op, rev1_op, rev2_op) {
+    rev2_op = rev2_op || rev1_op
+    return function(va, vb, vresult) {
+      if (arguments.length < 2) throw new Error(name + ' - initialisation error');
+      _apply();
+      return {
+        apply: _apply
+      };
+
+      function _apply() {
+        var maybeRes = maybe(va.read()).bind(a => maybe(vb.read()).bind(b => maybe(op(a, b))));
+        var maybeVb = maybe(vresult.read()).bind(sum => maybe(va.read()).bind(a => maybe(rev1_op(sum, a))));
+        var maybeVa = maybe(vresult.read()).bind(sum => maybe(vb.read()).bind(b => maybe(rev2_op(sum, b))));
+        return maybe(vresult.maybeSet(maybeRes))
+          .orElse(maybe(vb.maybeSet(maybeVb)))
+          .orElse(maybe(va.maybeSet(maybeVa)))
+      }
+    };
+  }
+
+  // chapter 3 - constraints evaluator
+  var _value = name => {
+    var _value = null;
+    var _operators = [];
+    var _set = value => {
+      if (typeof value === 'undefined' || value === null) return null;
+      _value = value;
+      _log();
+      _operators.forEach(function(op) { op.apply(); });
+      return value; // needed to make the maybe work
+    }
+    var _unset = () => {
+      _value = null;
+      _log();
+    }
+    var _log = () => console.log(name + ' - current value is ' + _value);
+    var _link = operator => {
+      _operators.push(operator);
+    }
+
+    return {
+      name: () => name,
+      set: _set,
+      maybeSet: maybe => !maybe.isNone() ? _set(maybe.get()) : null,
+      unset: _unset,
+      link: _link,
+      read: () => JSON.parse(JSON.stringify(_value))
+    };
+  }
+
+  var _constant = value => {
+    if (typeof value === 'undefined') throw new Error('constants must be valued');
+    return {
+      name: () => {},
+      set: () => {},
+      maybeSet: () => null,
+      read: () => JSON.parse(JSON.stringify(value))
+    };
+  }
+
+  function maybe(value) {
+    if (typeof value === 'undefined') throw new Error('maybe values cannot be undefined');    
+    var _bind = famb => (value !== null) ? famb(value) : maybe(null);
+    var _get = () => value;
+    var _orElse = mb => (value !== null) ? maybe(value) : mb;
+    return {
+      bind: _bind,
+      get: _get,
+      isNone: () => (value === null),
+      orElse: _orElse
+    };
+  }
+
   return {
-      make_tree: make_tree,
-      entry: entry,
-      left_branch: left_branch,
-      right_branch: right_branch,
-      depth: depth,
-      build_set_naive: build_set_naive,
-      element_of_set: element_of_set,
-      adjoin_set: adjoin_set,
-      tree_to_list1: tree_to_list1,
-      tree_to_list2: tree_to_list2,
-      build_balanced_tree: build_balanced_tree,
-      decodeH: decodeH,
-      buildH: buildH,
-      dictionaryH, dictionaryH
+    make_tree: make_tree,
+    entry: entry,
+    left_branch: left_branch,
+    right_branch: right_branch,
+    depth: depth,
+    build_set_naive: build_set_naive,
+    element_of_set: element_of_set,
+    adjoin_set: adjoin_set,
+    tree_to_list1: tree_to_list1,
+    tree_to_list2: tree_to_list2,
+    build_balanced_tree: build_balanced_tree,
+    decodeH: decodeH,
+    buildH: buildH,
+    dictionaryH, dictionaryH,
+    value: _value,
+    constant: _constant,
+    sum: _applier('sum', (a,b)=>a+b, (a,b)=>a-b),
+    product: _applier('product', (a,b)=>a*b, (a,b)=>a/b),
+    power: _applier('power', (a,b)=>Math.pow(a,b), (a,b)=>Math.log(a)/Math.log(b), (a,b)=>Math.pow(a,1/b))
   };
 }(geieslists);

@@ -9,7 +9,6 @@
 */var expect = chai.expect;
 
 describe('Implementing SICP chapter 2 brings to the realization of', function () {
-  
   var nil = L.nil;
   
   it('a function to build sets as trees in a naive manner', function() {
