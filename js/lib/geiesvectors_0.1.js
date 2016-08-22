@@ -1,4 +1,4 @@
-var V = function(L) {
+var V = geiesvectors = function(L) {
   var make_vect = (x, y) => L.ArrayToList([x, y]);
   var xcor_vect = L.first;
   var ycor_vect = L.second;
@@ -49,11 +49,28 @@ var V = function(L) {
                                0,0,1);
     return result;
   };
-  
+
   var angle_vect = vect => {
     var result = Math.atan(ycor_vect(vect)/xcor_vect(vect));
     if (xcor_vect(vect) < 0) result = result + Math.PI;
     return result;
+  };
+
+  var _prod_matrix_vect = (m1, v) => make_vect(
+    m1._11()*xcor_vect(v) + m1._12()*ycor_vect(v),
+    m1._21()*xcor_vect(v) + m1._22()*ycor_vect(v)
+  );
+
+  var rotate_vect = (vector, direction) => {
+    var rotationMatrix = rotation_matrix(angle_vect(direction));
+    var rotatedVector = _prod_matrix_vect(rotationMatrix, vector);
+    return rotatedVector;
+  };
+
+  var align_vect = (vector, direction) => {
+    var length = length_vect(vector);
+    var radians = angle_vect(direction);
+    return make_vect(length*Math.cos(radians), length*Math.sin(radians));
   };
 
   return {
@@ -64,6 +81,8 @@ var V = function(L) {
     add_vect: add_vect,
     sub_vect: sub_vect,
     scale_vect: scale_vect,
+    rotate_vect: rotate_vect,
+    align_vect: align_vect,
     transf_matrix: transf_matrix,
     add_matrix: add_matrix,
     mult_matrix: mult_matrix,
