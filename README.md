@@ -1,12 +1,8 @@
 # geiespictures   ( _j_-_s_-pictures)
 
-The [picture language](https://mitpress.mit.edu/sicp/full-text/sicp/book/node36.html) from chapter 2 of SICP, and more:
+The [picture language](https://mitpress.mit.edu/sicp/full-text/sicp/book/node36.html) from chapter 2 of SICP.
 
-- the picture language
-- sets && balanced trees
-- the Huffman trees
-- digital circuits simulator (upcoming)
-- constraints' propagation (upcoming)
+NB - for more implementations from the Wizard Book, see [GeiesSICP](https://github.com/Muzietto/geiessicp)
 
 ![alt image](/img/screams.jpg)
 ![alt image](/img/my_rogers.jpg)
