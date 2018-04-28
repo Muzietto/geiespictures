@@ -9,4 +9,5 @@ NB - for more implementations from the Wizard Book, see [GeiesSICP](https://gith
 
 ![alt image](/img/sandboxes.jpg)
 [SquareSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/SquareSandbox.html)
-[RotationsMatrixSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/RotationsMatrixSandbox.html)
+
+[RotationMatrixSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/RotationMatrixSandbox.html)
