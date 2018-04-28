@@ -2,7 +2,7 @@
 
 The [picture language](https://mitpress.mit.edu/sicp/full-text/sicp/book/node36.html) from chapter 2 of SICP.
 
-[MochaGeiespicturesTests.html](http://rawgit.com/Muzietto/geiespictures/master/MochaGeiespicturesTests.html)
+[Some unit tests](http://rawgit.com/Muzietto/geiespictures/master/MochaGeiespicturesTests.html)
 
 NB - for more implementations from the Wizard Book, see [GeiesSICP](https://github.com/Muzietto/geiessicp)
 
