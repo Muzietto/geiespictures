@@ -99,7 +99,7 @@ window.onload = function() {
 	P.shrink_to_upper_right(
 		P.picture_painter(rogers)
 	)
-    )(fourthQuarter)(ctx);
+    )(firstQuarter)(ctx);
     
     //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(scream)(secondQuarter,true)(ctx);
