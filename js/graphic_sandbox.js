@@ -90,7 +90,17 @@ window.onload = function() {
     //P.picture_painter(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
     //P.picture_painter(scream)(quarterRightUp,true)(ctx);
     //P.picture_painter(scream)(deg30ccwFrame,true)(ctx);
-    P.beside(P.atop(P.diamond_painter,P.picture_painter(scream)),P.shrink_to_upper_right(P.picture_painter(rogers)))(thirdQuarter)(ctx);
+	
+    P.beside(
+	P.atop(
+		P.diamond_painter,
+		P.picture_painter(scream)
+	       ),
+	P.shrink_to_upper_right(
+		P.picture_painter(rogers)
+	)
+    )(thirdQuarter)(ctx);
+    
     //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(scream)(secondQuarter,true)(ctx);
     //P.picture_painter(scream)(fourthQuarter,true)(ctx);
@@ -108,12 +118,17 @@ window.onload = function() {
 //P.flip_vert(P.diamond_painter)(quarterRightUpFromOrigin,true)(ctx);
 //
 //P.shrink_to_upper_right(P.diamond_painter)(quarterRightUp,true)(ctx,'red');
-P.naked_frame(firstQuarter)(ctx);
+
+//try this
+//P.naked_frame(firstQuarter)(ctx);
+
 //P.beside(P.flip_vert(P.beside(P.diamond_painter,
 //                              P.segments_painter([oneThirdToTwoThirds]))),
 //         P.beside(P.segments_painter([oneThirdToTwoThirds]),
 //                  P.diamond_painter))
 //        (firstQuarter,true)(ctx,'red');
-P.atop(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(secondQuarter,true)(ctx,'red');
-P.naked_frame(quarterRightUp)(ctx);
-P.beside(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(quarterRightUp,true)(ctx,'green');
+
+// try these three
+//P.atop(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(secondQuarter,true)(ctx,'red');
+//P.naked_frame(quarterRightUp)(ctx);
+//P.beside(P.diamond_painter,P.segments_painter([oneThirdToTwoThirds]))(quarterRightUp,true)(ctx,'green');
