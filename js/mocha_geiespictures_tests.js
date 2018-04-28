@@ -51,6 +51,7 @@ var fakeCtx = () => probe => {
 describe('a sound picture system requires', function () {
 
   it('a series of vector operations that allow to measure, sum, subtract, scale, rotate and align  vectors', function () {
+
     var pippo = V.make_vect(-3, 1);
     var pluto = V.make_vect(-2, 3);
     expect(V.length_vect(pippo)).to.be.gt(3.16);
@@ -68,6 +69,7 @@ describe('a sound picture system requires', function () {
     var deg30 = V.make_vect(Math.sqrt(3) / 2, .5);
     expect(V.angle_vect(deg30)).to.be.gt(0.523);
     expect(V.angle_vect(deg30)).to.be.lt(0.524);
+
     var deg45 = V.make_vect(1, 1);
     var deg75 = V.rotate_vect(deg30, deg45);
     expect(V.length_vect(deg75)).to.be.gt(0.999);
@@ -79,7 +81,9 @@ describe('a sound picture system requires', function () {
     expect(V.length_vect(aligned)).to.be.gt(3.16);
     expect(V.length_vect(aligned)).to.be.lt(3.17);
     expect(V.xcor_vect(aligned)).to.be.equal(V.ycor_vect(aligned));
+
   });
+
   it('a series of matrix operations for HTML5 canvases', function () {
 
     var pippo = V.transf_matrix(11, 12, 13, 21, 22, 23, 31, 32, 33);
@@ -181,10 +185,13 @@ describe('a sound picture system requires', function () {
 
     var deg30 = V.make_vect(.87, .5);
     expect(Math.round(100 * V.angle_vect(deg30))).to.be.equal(52);
+
     var minusDeg30 = V.make_vect(.87, -.5);
     expect(Math.round(100 * V.angle_vect(minusDeg30))).to.be.equal(-52);
+
     var minusDeg60 = V.make_vect(.5, -.87);
     expect(Math.round(100 * V.angle_vect(minusDeg60))).to.be.equal(-105);
+
     var deg120 = V.make_vect(-.5, .87);
     expect(Math.round(100 * V.angle_vect(deg120))).to.be.equal(209);
 
@@ -199,14 +206,17 @@ describe('a sound picture system requires', function () {
     expect(testProbe._13).to.be.equal(13);
     expect(testProbe._23).to.be.equal(23);
   });
+
   it('definitions for fold left and right', function () {
     expect(L.fold((x, ys) => x + ys, 0, L.ArrayToList([1, 3, 5]))).to.be.equal(9);
     expect(L.foldl((acc, x) => acc + x, 0, L.ArrayToList([1, 3, 6]))).to.be.equal(10);
   });
 });
+
 describe('a sound picture system entails', function () {
 
   it('functions to handle frames', function () {
+
     var origin = V.make_vect(-3, 1);
     var edge1 = V.make_vect(5, 3);
     var edge2 = V.make_vect(-2, 3);
@@ -216,6 +226,7 @@ describe('a sound picture system entails', function () {
     expect(P.edge1_frame(fram1).c).to.be.equal('[5,3]');
     expect(P.edge2_frame(fram1).c).to.be.equal('[-2,3]');
   });
+
   it('a coordinateMapper, measuring pixels relative to the canvas origin', function () {
 
     var origin = V.make_vect(-3, 1);
@@ -224,15 +235,22 @@ describe('a sound picture system entails', function () {
     var fram1 = P.make_frame(origin, edge1, edge2);
 
     var coordinateMapper1 = P.frame_coord_map(fram1);
+
     var unitVec = V.make_vect(1, 1);
     var testVec = V.make_vect(2, 2);
+    var testVec2 = V.make_vect(2, 0);
     var mappedUnit = coordinateMapper1(unitVec);
     var mappedTest = coordinateMapper1(testVec);
+    var mappedTest2 = coordinateMapper1(testVec2);
 
     expect(mappedUnit.c).to.be.equal('[0,7]');
     expect(mappedTest.c).to.be.equal('[3,13]');
+    expect(mappedTest2.c).to.be.equal('[7,7]');
+
   });
+
   it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function () {
+
     var origin = V.make_vect(-100, 25);
     var edge1 = V.make_vect(0, 50);
     var edge2 = V.make_vect(-100, 0);
@@ -248,5 +266,7 @@ describe('a sound picture system entails', function () {
     expect(testProbe.startY).to.be.equal(75);
     expect(testProbe.endX).to.be.equal(0);
     expect(testProbe.endY).to.be.equal(25);
+
   });
+
 });

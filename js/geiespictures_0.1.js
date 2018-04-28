@@ -15,15 +15,28 @@ var P = function (L, V) {
 
   // canvas pixels relative to center of canvas
   var frame_coord_map = frame => vector =>
-    V.add_vect(origin_frame(frame),
-      V.add_vect(V.scale_vect(edge1_frame(frame),
-        V.xcor_vect(vector)),
-        V.scale_vect(edge2_frame(frame),
-          V.ycor_vect(vector))));
+    V.add_vect(
+      origin_frame(frame),
+      V.add_vect(
+
+        // [
+        //   V.xcor_vect(vector)*V.xcor.vect(edge1_frame(frame)),
+        //   V.xcor_vect(vector)*V.ycor.vect(edge1_frame(frame)),
+        // ]
+        V.scale_vect(edge1_frame(frame), V.xcor_vect(vector)),
+
+        // [
+        //   V.ycor_vect(vector)*V.xcor.vect(edge2_frame(frame)),
+        //   V.ycor_vect(vector)*V.ycor.vect(edge2_frame(frame)),
+        // ]
+        V.scale_vect(edge2_frame(frame), V.ycor_vect(vector))
+      )
+    );
 
   var make_segment = (start, end) => L.ArrayToList([start, end]);
   var start_segment = segment => L.first(segment);
   var end_segment = segment => L.second(segment);
+
   var transform_ctx = (ctx, matrix) => {
     ctx.transform(matrix._11(),
       matrix._21(),
@@ -36,13 +49,16 @@ var P = function (L, V) {
   // painter(what)(where)(canvasContext)
   var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
     color = color || '#000000';
+
     if (paintFrame) frame_painter(frame, ctx, color);
+
     var canvasWidth = ctx.canvas.clientWidth;
     var canvasHeight = ctx.canvas.clientHeight;
     var newCanvasOriginX = canvasWidth / 2;
     var newCanvasOriginY = canvasHeight / 2;
     var X = x => x + newCanvasOriginX;
     var Y = y => -(y + newCanvasOriginY) + canvasHeight;
+
     var draw_segment = segment => {
       ctx.resetTransform();
       var coordinateMapper = frame_coord_map(frame);
