@@ -8,239 +8,239 @@
  The MIT License - Copyright (c) 2016 Geiespictures Project
  */
 var P = function (L, V) {
-    var make_frame = (origin, edge1, edge2) => L.ArrayToList([origin, edge1, edge2]);
-    var origin_frame = frame => L.first(frame);
-    var edge1_frame = frame => L.second(frame);
-    var edge2_frame = frame => L.third(frame);
+  var make_frame = (origin, edge1, edge2) => L.ArrayToList([origin, edge1, edge2]);
+  var origin_frame = frame => L.first(frame);
+  var edge1_frame = frame => L.second(frame);
+  var edge2_frame = frame => L.third(frame);
 
-    // canvas pixels relative to center of canvas
-    var frame_coord_map = frame => vector =>
-        V.add_vect(origin_frame(frame),
-            V.add_vect(V.scale_vect(edge1_frame(frame),
-                V.xcor_vect(vector)),
-                V.scale_vect(edge2_frame(frame),
-                    V.ycor_vect(vector))));
+  // canvas pixels relative to center of canvas
+  var frame_coord_map = frame => vector =>
+    V.add_vect(origin_frame(frame),
+      V.add_vect(V.scale_vect(edge1_frame(frame),
+        V.xcor_vect(vector)),
+        V.scale_vect(edge2_frame(frame),
+          V.ycor_vect(vector))));
 
-    var make_segment = (start, end) => L.ArrayToList([start, end]);
-    var start_segment = segment => L.first(segment);
-    var end_segment = segment => L.second(segment);
-    var transform_ctx = (ctx, matrix) => {
-        ctx.transform(matrix._11(),
-            matrix._21(),
-            matrix._12(),
-            matrix._22(),
-            matrix._13(),
-            matrix._23());
+  var make_segment = (start, end) => L.ArrayToList([start, end]);
+  var start_segment = segment => L.first(segment);
+  var end_segment = segment => L.second(segment);
+  var transform_ctx = (ctx, matrix) => {
+    ctx.transform(matrix._11(),
+      matrix._21(),
+      matrix._12(),
+      matrix._22(),
+      matrix._13(),
+      matrix._23());
+  };
+
+  // painter(what)(where)(canvasContext)
+  var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
+    color = color || '#000000';
+    if (paintFrame) frame_painter(frame, ctx, color);
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var newCanvasOriginX = canvasWidth / 2;
+    var newCanvasOriginY = canvasHeight / 2;
+    var X = x => x + newCanvasOriginX;
+    var Y = y => -(y + newCanvasOriginY) + canvasHeight;
+    var draw_segment = segment => {
+      ctx.resetTransform();
+      var coordinateMapper = frame_coord_map(frame);
+      var startPoint = coordinateMapper(start_segment(segment));
+      var endPoint = coordinateMapper(end_segment(segment));
+      ctx.beginPath();
+      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
+      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      ctx.strokeStyle = color;
+      ctx.stroke();
+      ctx.resetTransform();
     };
+    segments.forEach(draw_segment);
+  };
 
-    // painter(what)(where)(canvasContext)
-    var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
-        color = color || '#000000';
-        if (paintFrame) frame_painter(frame, ctx, color);
-        var canvasWidth = ctx.canvas.clientWidth;
-        var canvasHeight = ctx.canvas.clientHeight;
-        var newCanvasOriginX = canvasWidth / 2;
-        var newCanvasOriginY = canvasHeight / 2;
-        var X = x => x + newCanvasOriginX;
-        var Y = y => -(y + newCanvasOriginY) + canvasHeight;
-        var draw_segment = segment => {
-            ctx.resetTransform();
-            var coordinateMapper = frame_coord_map(frame);
-            var startPoint = coordinateMapper(start_segment(segment));
-            var endPoint = coordinateMapper(end_segment(segment));
-            ctx.beginPath();
-            ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
-            ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
-            ctx.strokeStyle = color;
-            ctx.stroke();
-            ctx.resetTransform();
-        };
-        segments.forEach(draw_segment);
+  var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
+    var mapper = frame_coord_map(frame);
+    var newFrame = P.make_frame(mapper(origin),
+      V.sub_vect(mapper(xAxis), mapper(origin)),
+      V.sub_vect(mapper(yAxis), mapper(origin)));
+    return painter(newFrame, paintFrame);
+  };
+
+  var beside = (p1, p2) => {
+    var leftPainter = transform_painter(p1, V.make_vect(0, 0), V.make_vect(0.5, 0), V.make_vect(0, 1));
+    var rightPainter = transform_painter(p2, V.make_vect(0.5, 0), V.make_vect(1, 0), V.make_vect(0.5, 1));
+    return (frame, paintFrame) => (ctx, color) => {
+      leftPainter(frame, paintFrame)(ctx, color);
+      rightPainter(frame, paintFrame)(ctx, color);
     };
+  };
 
-    var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
-        var mapper = frame_coord_map(frame);
-        var newFrame = P.make_frame(mapper(origin),
-            V.sub_vect(mapper(xAxis), mapper(origin)),
-            V.sub_vect(mapper(yAxis), mapper(origin)));
-        return painter(newFrame, paintFrame);
+  var atop = (p1, p2) => {
+    var topPainter = transform_painter(p1, V.make_vect(0, .5), V.make_vect(1, .5), V.make_vect(0, 1));
+    var bottomPainter = transform_painter(p2, V.make_vect(0, 0), V.make_vect(1, 0), V.make_vect(0, .5));
+    return (frame, paintFrame) => (ctx, color) => {
+      topPainter(frame, paintFrame)(ctx, color);
+      bottomPainter(frame, paintFrame)(ctx, color);
     };
+  };
 
-    var beside = (p1, p2) => {
-        var leftPainter = transform_painter(p1, V.make_vect(0, 0), V.make_vect(0.5, 0), V.make_vect(0, 1));
-        var rightPainter = transform_painter(p2, V.make_vect(0.5, 0), V.make_vect(1, 0), V.make_vect(0.5, 1));
-        return (frame, paintFrame) => (ctx, color) => {
-            leftPainter(frame, paintFrame)(ctx, color);
-            rightPainter(frame, paintFrame)(ctx, color);
-        };
-    };
+  var right_split = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      var smaller = right_split(painter, n - 1);
+      return beside(painter, atop(smaller, smaller));
+      //return beside(painter, right_split(painter, n-1));
+    }
+  };
 
-    var atop = (p1, p2) => {
-        var topPainter = transform_painter(p1, V.make_vect(0, .5), V.make_vect(1, .5), V.make_vect(0, 1));
-        var bottomPainter = transform_painter(p2, V.make_vect(0, 0), V.make_vect(1, 0), V.make_vect(0, .5));
-        return (frame, paintFrame) => (ctx, color) => {
-            topPainter(frame, paintFrame)(ctx, color);
-            bottomPainter(frame, paintFrame)(ctx, color);
-        };
-    };
+  var top_split = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      var smaller = top_split(painter, n - 1);
+      return atop(beside(smaller, smaller), painter);
+      //return beside(painter, right_split(painter, n-1));
+    }
+  };
 
-    var right_split = (painter, n) => {
-        if (n === 0) {
-            return painter;
-        } else {
-            var smaller = right_split(painter, n - 1);
-            return beside(painter, atop(smaller, smaller));
-            //return beside(painter, right_split(painter, n-1));
-        }
-    };
+  var corner_split = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      return beside(atop(top_split(painter, n - 1), painter),
+        atop(corner_split(painter, n - 1), right_split(painter, n - 1)));
+    }
+  };
 
-    var top_split = (painter, n) => {
-        if (n === 0) {
-            return painter;
-        } else {
-            var smaller = top_split(painter, n - 1);
-            return atop(beside(smaller, smaller), painter);
-            //return beside(painter, right_split(painter, n-1));
-        }
-    };
+  var centered = painter => transform_painter(painter,
+    V.make_vect(.25, 0),
+    V.make_vect(.75, 0),
+    V.make_vect(0, 1));
 
-    var corner_split = (painter, n) => {
-        if (n === 0) {
-            return painter;
-        } else {
-            return beside(atop(top_split(painter, n - 1), painter),
-                atop(corner_split(painter, n - 1), right_split(painter, n - 1)));
-        }
-    };
+  var tree1 = (painter, n) => {
+    if (n === 0) {
+      return painter;
+    } else {
+      var next = tree1(painter, n - 1);
+      return atop(beside(next, next), centered(painter));
+    }
+  };
 
-    var centered = painter => transform_painter(painter,
-        V.make_vect(.25, 0),
-        V.make_vect(.75, 0),
-        V.make_vect(0, 1));
+  var flip_vert = painter => transform_painter(painter,
+    V.make_vect(0, 1), // new origin
+    V.make_vect(1, 1), // new END of xAxe in old frame coords
+    V.make_vect(0, 0));// new END of yAxe in old frame coords
 
-    var tree1 = (painter, n) => {
-        if (n === 0) {
-            return painter;
-        } else {
-            var next = tree1(painter, n - 1);
-            return atop(beside(next, next), centered(painter));
-        }
-    };
+  var flip_horiz = painter => transform_painter(painter,
+    V.make_vect(1, 0), // new origin
+    V.make_vect(0, 0), // new END of xAxe
+    V.make_vect(1, 1));// new END of yAxe
 
-    var flip_vert = painter => transform_painter(painter,
-        V.make_vect(0, 1), // new origin
-        V.make_vect(1, 1), // new END of xAxe in old frame coords
-        V.make_vect(0, 0));// new END of yAxe in old frame coords
+  var shrink_to_upper_right = painter => transform_painter(painter,
+    V.make_vect(.5, .5), // new origin
+    V.make_vect(1, .5), // new END of xAxe in old frame coords
+    V.make_vect(.5, 1));// new END of yAxe in old frame coords
 
-    var flip_horiz = painter => transform_painter(painter,
-        V.make_vect(1, 0), // new origin
-        V.make_vect(0, 0), // new END of xAxe
-        V.make_vect(1, 1));// new END of yAxe
+  // paints also rotated/skewed frames
+  var frame_painter = (frame, ctx, color) => {
+    var frameAxes =
+      [
+        make_segment(V.make_vect(0, 0), V.make_vect(1, 0)),        // x-axis
+        make_segment(V.make_vect(1, 0), V.make_vect(.95, .05)),    // x-arrow
+        make_segment(V.make_vect(1, 0), V.make_vect(.95, -.05)),   // x-arrow
+        make_segment(V.make_vect(.95, .1), V.make_vect(.98, .16)), // x
+        make_segment(V.make_vect(.95, .16), V.make_vect(.98, .1)), // x
+        make_segment(V.make_vect(0, 0), V.make_vect(0, 1)),        // y-axis
+        make_segment(V.make_vect(0, 1), V.make_vect(-.05, .95)),   // y-arrow
+        make_segment(V.make_vect(0, 1), V.make_vect(.05, .95)),    // y-arrow
+        make_segment(V.make_vect(.08, .92), V.make_vect(.13, .98)),// y
+        make_segment(V.make_vect(.08, .98), V.make_vect(.1, .95))  // y
+      ];
+    segments_painter(frameAxes)(frame)(ctx, color);
+  };
 
-    var shrink_to_upper_right = painter => transform_painter(painter,
-        V.make_vect(.5, .5), // new origin
-        V.make_vect(1, .5), // new END of xAxe in old frame coords
-        V.make_vect(.5, 1));// new END of yAxe in old frame coords
+  var naked_frame = frame => segments_painter([])(frame, true);
 
-    // paints also rotated/skewed frames
-    var frame_painter = (frame, ctx, color) => {
-        var frameAxes =
-            [
-                make_segment(V.make_vect(0, 0), V.make_vect(1, 0)),        // x-axis
-                make_segment(V.make_vect(1, 0), V.make_vect(.95, .05)),    // x-arrow
-                make_segment(V.make_vect(1, 0), V.make_vect(.95, -.05)),   // x-arrow
-                make_segment(V.make_vect(.95, .1), V.make_vect(.98, .16)), // x
-                make_segment(V.make_vect(.95, .16), V.make_vect(.98, .1)), // x
-                make_segment(V.make_vect(0, 0), V.make_vect(0, 1)),        // y-axis
-                make_segment(V.make_vect(0, 1), V.make_vect(-.05, .95)),   // y-arrow
-                make_segment(V.make_vect(0, 1), V.make_vect(.05, .95)),    // y-arrow
-                make_segment(V.make_vect(.08, .92), V.make_vect(.13, .98)),// y
-                make_segment(V.make_vect(.08, .98), V.make_vect(.1, .95))  // y
-            ];
-        segments_painter(frameAxes)(frame)(ctx, color);
-    };
+  var diamond_painter = (frame, paintFrame) => (ctx, color) => {
+    var diamondPieces =
+      [
+        make_segment(V.make_vect(.14, .50), V.make_vect(.50, .86)),
+        make_segment(V.make_vect(.50, .86), V.make_vect(.86, .50)),
+        make_segment(V.make_vect(.86, .50), V.make_vect(.50, .14)),
+        make_segment(V.make_vect(.50, .14), V.make_vect(.14, .50)),
 
-    var naked_frame = frame => segments_painter([])(frame, true);
+        make_segment(V.make_vect(.28, .50), V.make_vect(.50, .72)),
+        make_segment(V.make_vect(.50, .72), V.make_vect(.72, .50)),
+        make_segment(V.make_vect(.72, .50), V.make_vect(.50, .28)),
+        make_segment(V.make_vect(.50, .28), V.make_vect(.28, .50)),
 
-    var diamond_painter = (frame, paintFrame) => (ctx, color) => {
-        var diamondPieces =
-            [
-                make_segment(V.make_vect(.14, .50), V.make_vect(.50, .86)),
-                make_segment(V.make_vect(.50, .86), V.make_vect(.86, .50)),
-                make_segment(V.make_vect(.86, .50), V.make_vect(.50, .14)),
-                make_segment(V.make_vect(.50, .14), V.make_vect(.14, .50)),
+        make_segment(V.make_vect(.42, .50), V.make_vect(.50, .58)),
+        make_segment(V.make_vect(.50, .58), V.make_vect(.58, .50)),
+        make_segment(V.make_vect(.58, .50), V.make_vect(.50, .42)),
+        make_segment(V.make_vect(.50, .42), V.make_vect(.42, .50)),
+        make_segment(V.make_vect(.5, .5), V.make_vect(1, 1))
+      ];
+    segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
+  };
 
-                make_segment(V.make_vect(.28, .50), V.make_vect(.50, .72)),
-                make_segment(V.make_vect(.50, .72), V.make_vect(.72, .50)),
-                make_segment(V.make_vect(.72, .50), V.make_vect(.50, .28)),
-                make_segment(V.make_vect(.50, .28), V.make_vect(.28, .50)),
+  var picture_painter = img => (frame, paintFrame) => ctx => {
+    ctx.resetTransform();
 
-                make_segment(V.make_vect(.42, .50), V.make_vect(.50, .58)),
-                make_segment(V.make_vect(.50, .58), V.make_vect(.58, .50)),
-                make_segment(V.make_vect(.58, .50), V.make_vect(.50, .42)),
-                make_segment(V.make_vect(.50, .42), V.make_vect(.42, .50)),
-                make_segment(V.make_vect(.5, .5), V.make_vect(1, 1))
-            ];
-        segments_painter(diamondPieces)(frame, paintFrame)(ctx, color);
-    };
+    var imgWidth = img.width;
+    var imgHeight = img.height;
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var frameWidth = V.length_vect(edge1_frame(frame));
+    var frameHeight = V.length_vect(edge2_frame(frame));
 
-    var picture_painter = img => (frame, paintFrame) => ctx => {
-        ctx.resetTransform();
+    var newCanvasOriginX = canvasWidth / 2;
+    var newCanvasOriginY = canvasHeight / 2;
+    ctx.translate(newCanvasOriginX, newCanvasOriginY);
 
-        var imgWidth = img.width;
-        var imgHeight = img.height;
-        var canvasWidth = ctx.canvas.clientWidth;
-        var canvasHeight = ctx.canvas.clientHeight;
-        var frameWidth = V.length_vect(edge1_frame(frame));
-        var frameHeight = V.length_vect(edge2_frame(frame));
+    var mapper = frame_coord_map(frame);
+    var frameOriginX = V.xcor_vect(origin_frame(frame));
+    var frameOriginY = V.ycor_vect(origin_frame(frame));
+    ctx.translate(frameOriginX, -frameOriginY);
 
-        var newCanvasOriginX = canvasWidth / 2;
-        var newCanvasOriginY = canvasHeight / 2;
-        ctx.translate(newCanvasOriginX, newCanvasOriginY);
+    // currently ignoring skewed y-axes
+    var frameRotation = V.angle_vect(edge1_frame(frame));
+    ctx.rotate(-frameRotation);
 
-        var mapper = frame_coord_map(frame);
-        var frameOriginX = V.xcor_vect(origin_frame(frame));
-        var frameOriginY = V.ycor_vect(origin_frame(frame));
-        ctx.translate(frameOriginX, -frameOriginY);
+    // final vertical transfer
+    ctx.translate(0, -frameHeight);
 
-        // currently ignoring skewed y-axes
-        var frameRotation = V.angle_vect(edge1_frame(frame));
-        ctx.rotate(-frameRotation);
+    var imgWidthScale = frameWidth / imgWidth;
+    var imgHeightScale = frameHeight / imgHeight;
+    ctx.scale(imgWidthScale, imgHeightScale);
 
-        // final vertical transfer
-        ctx.translate(0, -frameHeight);
+    // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
+    ctx.drawImage(img, 0, 0);
+    ctx.resetTransform();
+    if (paintFrame) frame_painter(frame, ctx);
+  };
 
-        var imgWidthScale = frameWidth / imgWidth;
-        var imgHeightScale = frameHeight / imgHeight;
-        ctx.scale(imgWidthScale, imgHeightScale);
-
-        // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
-        ctx.drawImage(img, 0, 0);
-        ctx.resetTransform();
-        if (paintFrame) frame_painter(frame, ctx);
-    };
-
-    return {
-        make_frame: make_frame,
-        origin_frame: origin_frame,
-        edge1_frame: edge1_frame,
-        edge2_frame: edge2_frame,
-        frame_coord_map: frame_coord_map,
-        make_segment: make_segment,
-        transform_ctx: transform_ctx,
-        segments_painter: segments_painter,
-        picture_painter: picture_painter,
-        naked_frame: naked_frame,
-        diamond_painter: diamond_painter,
-        flip_vert: flip_vert,
-        flip_horiz: flip_horiz,
-        shrink_to_upper_right: shrink_to_upper_right,
-        beside: beside,
-        atop: atop,
-        right_split: right_split,
-        top_split: top_split,
-        corner_split: corner_split,
-        centered: centered,
-        tree1: tree1
-    };
+  return {
+    make_frame: make_frame,
+    origin_frame: origin_frame,
+    edge1_frame: edge1_frame,
+    edge2_frame: edge2_frame,
+    frame_coord_map: frame_coord_map,
+    make_segment: make_segment,
+    transform_ctx: transform_ctx,
+    segments_painter: segments_painter,
+    picture_painter: picture_painter,
+    naked_frame: naked_frame,
+    diamond_painter: diamond_painter,
+    flip_vert: flip_vert,
+    flip_horiz: flip_horiz,
+    shrink_to_upper_right: shrink_to_upper_right,
+    beside: beside,
+    atop: atop,
+    right_split: right_split,
+    top_split: top_split,
+    corner_split: corner_split,
+    centered: centered,
+    tree1: tree1
+  };
 }(L, V);

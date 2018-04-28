@@ -24,9 +24,9 @@ ctx.strokeStyle = '#ff0000';
 //};
 
 var point = (canvasX, canvasY) => {
-    ctx.beginPath();
-    ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI, true);
-    ctx.fill();
+  ctx.beginPath();
+  ctx.arc(canvasX, canvasY, 5, 0, 2 * Math.PI, true);
+  ctx.fill();
 };
 
 var point_vec = vector => point(V.xcor_vect(vector), V.ycor_vect(vector));
@@ -86,40 +86,40 @@ var quarterLeftDownFromOrigin = P.make_frame(origin, quarterLeft, quarterDown);
 // image painter at work
 window.onload = function () {
 
-    point(canvasWidth / 2, canvasHeight / 2);
-    var scream = document.getElementById('scream');
-    var rogers = document.getElementById('rogers');
-    //P.picture_painter(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
-    //P.picture_painter(scream)(quarterRightUp,true)(ctx);
-    //P.picture_painter(scream)(deg30ccwFrame,true)(ctx);
+  point(canvasWidth / 2, canvasHeight / 2);
+  var scream = document.getElementById('scream');
+  var rogers = document.getElementById('rogers');
+  //P.picture_painter(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
+  //P.picture_painter(scream)(quarterRightUp,true)(ctx);
+  //P.picture_painter(scream)(deg30ccwFrame,true)(ctx);
 
-    P.beside(
-        P.atop(
-            P.diamond_painter,
-            P.picture_painter(scream)
-        ),
-        P.shrink_to_upper_right(
-            P.picture_painter(rogers)
-        )
-    )(thirdQuarter)(ctx);
+  P.beside(
+    P.atop(
+      P.diamond_painter,
+      P.picture_painter(scream)
+    ),
+    P.shrink_to_upper_right(
+      P.picture_painter(rogers)
+    )
+  )(thirdQuarter)(ctx);
 
-    P.flip_horiz(P.diamond_painter)(secondQuarter, true)(ctx);
+  P.flip_horiz(P.diamond_painter)(secondQuarter, true)(ctx);
 
-    P.naked_frame(firstQuarter)(ctx);
+  P.naked_frame(firstQuarter)(ctx);
 
-    P.diamond_painter(quarterRightUp, true)(ctx);
+  P.diamond_painter(quarterRightUp, true)(ctx);
 
-    P.picture_painter(scream)(fourthQuarter, true)(ctx);
+  P.picture_painter(scream)(fourthQuarter, true)(ctx);
 
-    //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
-    //P.picture_painter(scream)(secondQuarter,true)(ctx);
-    //P.picture_painter(scream)(fourthQuarter,true)(ctx);
+  //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
+  //P.picture_painter(scream)(secondQuarter,true)(ctx);
+  //P.picture_painter(scream)(fourthQuarter,true)(ctx);
 
-    //P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
-    //P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
-    //P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
-    //P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
-    //P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
+  //P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
+  //P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
+  //P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
+  //P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
+  //P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
 
 };
 
