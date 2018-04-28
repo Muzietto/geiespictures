@@ -94,11 +94,12 @@ window.onload = function() {
     //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
     //P.picture_painter(scream)(secondQuarter,true)(ctx);
     //P.picture_painter(scream)(fourthQuarter,true)(ctx);
-    P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
-    P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
-    P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
-    P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
-    P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
+    
+    //P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
+    //P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
+    //P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
+    //P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
+    //P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
 };
 
 //P.diamond_painter(quarterRightUp,true)(ctx);
