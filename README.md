@@ -8,6 +8,6 @@ NB - for more implementations from the Wizard Book, see [GeiesSICP](https://gith
 ![alt image](/img/my_rogers.jpg)
 
 ![alt image](/img/sandboxes.jpg)
+[GraphicSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/GraphicSandbox.html)
 [SquareSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/SquareSandbox.html)
-
 [RotationMatrixSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/RotationMatrixSandbox.html)
