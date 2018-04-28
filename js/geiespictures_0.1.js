@@ -60,6 +60,7 @@ var P = function (L, V) {
     var Y = y => -(y + newCanvasOriginY) + canvasHeight;
 
     var draw_segment = segment => {
+
       ctx.resetTransform();
       var coordinateMapper = frame_coord_map(frame);
       var startPoint = coordinateMapper(start_segment(segment));
@@ -71,14 +72,20 @@ var P = function (L, V) {
       ctx.stroke();
       ctx.resetTransform();
     };
+
     segments.forEach(draw_segment);
   };
 
   var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
+
     var mapper = frame_coord_map(frame);
-    var newFrame = P.make_frame(mapper(origin),
+
+    var newFrame = P.make_frame(
+      mapper(origin),
       V.sub_vect(mapper(xAxis), mapper(origin)),
-      V.sub_vect(mapper(yAxis), mapper(origin)));
+      V.sub_vect(mapper(yAxis), mapper(origin))
+    );
+
     return painter(newFrame, paintFrame);
   };
 
@@ -201,6 +208,7 @@ var P = function (L, V) {
   };
 
   var picture_painter = img => (frame, paintFrame) => ctx => {
+
     ctx.resetTransform();
 
     var imgWidth = img.width;
@@ -233,7 +241,9 @@ var P = function (L, V) {
     // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
     ctx.drawImage(img, 0, 0);
     ctx.resetTransform();
+
     if (paintFrame) frame_painter(frame, ctx);
+
   };
 
   return {
