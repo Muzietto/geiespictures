@@ -35,6 +35,11 @@ var fakeCtx = () => probe => {
       probe.endX = x;
       probe.endY = y;
     },
+    arc: (cx, cy, r, start, end) => {
+      probe.centerX = cx;
+      probe.centerY = cy;
+      probe.radius = r;
+    },
     stroke: () => {
     },
     transform: (m11, m21, m12, m22, m13, m23) => {
@@ -249,24 +254,108 @@ describe('a sound picture system entails', function () {
 
   });
 
-  it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function () {
+  describe('painters that use the center of a canvas as origin and flip its y-axe, like', () => {
+    it('a single_dot_painterSICP that takes a point in a frame and converts its coordinates into DOM canvas pixel coords', function () {
 
-    var origin = V.make_vect(-100, 25);
-    var edge1 = V.make_vect(0, 50);
-    var edge2 = V.make_vect(-100, 0);
-    var fram1 = P.make_frame(origin, edge1, edge2);
+      var origin = V.make_vect(-100, 25);
+      var edge1 = V.make_vect(0, 50);
+      var edge2 = V.make_vect(-100, 0);
+      var fram1 = P.make_frame(origin, edge1, edge2);
 
-    var testProbe = probe();
-    var fakeContext = fakeCtx()(testProbe);
+      var testProbe = probe();
+      var fakeContext = fakeCtx()(testProbe); // canvas 400x200
 
-    // drawing a diagonal from frame origin to opposite corner
-    P.segments_painter([P.make_segment(V.make_vect(0, 0), V.make_vect(1, 1))])(fram1)(fakeContext);
+      // drawing a point in the frame origin
+      var origgio = V.make_vect(0, 0);
+      P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
 
-    expect(testProbe.startX).to.be.equal(100);
-    expect(testProbe.startY).to.be.equal(75);
-    expect(testProbe.endX).to.be.equal(0);
-    expect(testProbe.endY).to.be.equal(25);
+      expect(testProbe.centerX).to.be.equal(100);
+      expect(testProbe.centerY).to.be.equal(75);
+      expect(testProbe.radius).to.be.equal(1);
 
+      // drawing a point at (1,1) in the frame reference
+      var unouno = V.make_vect(1, 1);
+      P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+
+      expect(testProbe.centerX).to.be.equal(0);
+      expect(testProbe.centerY).to.be.equal(25);
+    });
+
+    it('a segments_painterSICP that maps frames into DOM canvas, adapting the coordinates', function () {
+
+      var origin = V.make_vect(-100, 25);
+      var edge1 = V.make_vect(0, 50);
+      var edge2 = V.make_vect(-100, 0);
+      var fram1 = P.make_frame(origin, edge1, edge2);
+
+      var testProbe = probe();
+      var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+      // drawing a diagonal from frame origin to opposite corner
+      P.segments_painterSICP([P.make_segment(V.make_vect(0, 0), V.make_vect(1, 1))])(fram1)(fakeContext);
+
+      expect(testProbe.startX).to.be.equal(100);
+      expect(testProbe.startY).to.be.equal(75);
+      expect(testProbe.endX).to.be.equal(0);
+      expect(testProbe.endY).to.be.equal(25);
+
+    });
+
+  });
+
+  describe('painters that use the native origin and coordinates of a canvas, like', () => {
+    it('a single_dot_painter that takes a point in a frame and converts its coordinates into DOM canvas pixel coords', function () {
+
+      var origin = V.make_vect(100, 25);
+      var edge1 = V.make_vect(100, 0);
+      var edge2 = V.make_vect(0, 100);
+      var fram1 = P.make_frame(origin, edge1, edge2);
+
+      var testProbe = probe();
+      var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+      // drawing a point in the frame origin
+      var origgio = V.make_vect(0, 0);
+      P.single_dot_painter(origgio)(fram1)(fakeContext);
+
+      expect(testProbe.centerX).to.be.equal(100);
+      expect(testProbe.centerY).to.be.equal(25);
+      expect(testProbe.radius).to.be.equal(1);
+
+      // drawing a point at (1,1) in the frame reference
+      var unouno = V.make_vect(1, 1);
+      P.single_dot_painter(unouno)(fram1)(fakeContext);
+
+      expect(testProbe.centerX).to.be.equal(200);
+      expect(testProbe.centerY).to.be.equal(125);
+
+      // TODO: verify rotations
+
+    });
+
+    it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function () {
+
+      // TODO - adjust fomr here
+      var origin = V.make_vect(-100, 25);
+      var edge1 = V.make_vect(0, 50);
+      var edge2 = V.make_vect(-100, 0);
+      var fram1 = P.make_frame(origin, edge1, edge2);
+
+      var testProbe = probe();
+      var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+      // drawing a diagonal from frame origin to opposite corner
+      P.segments_painter([P.make_segment(V.make_vect(0, 0), V.make_vect(1, 1))])(fram1)(fakeContext);
+
+      expect(testProbe.startX).to.be.equal(100);
+      expect(testProbe.startY).to.be.equal(75);
+      expect(testProbe.endX).to.be.equal(0);
+      expect(testProbe.endY).to.be.equal(25);
+
+    });
+  });
+
+  describe('functions to manipulate painters', () => {
   });
 
 });

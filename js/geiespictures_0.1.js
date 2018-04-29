@@ -3,9 +3,9 @@
  Author: Marco Faustinelli (contacts@faustinelli.net)
  Web: http://faustinelli.net/
  http://faustinelli.wordpress.com/
- Version: 0.1 - Requires Geieslists 1.1 and Geiesvectors 0.1
+ Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.1
 
- The MIT License - Copyright (c) 2016 Geiespictures Project
+ The MIT License - Copyright (c) 2016-2018 Geiespictures Project
  */
 var P = function (L, V) {
   var make_frame = (origin, edge1, edge2) => L.ArrayToList([origin, edge1, edge2]);
@@ -13,12 +13,11 @@ var P = function (L, V) {
   var edge1_frame = frame => L.second(frame);
   var edge2_frame = frame => L.third(frame);
 
-  // canvas pixels relative to center of canvas
+  // canvas pixels relative to canvas origin
   var frame_coord_map = frame => vector =>
     V.add_vect(
       origin_frame(frame),
       V.add_vect(
-
         // [
         //   V.xcor_vect(vector)*V.xcor.vect(edge1_frame(frame)),
         //   V.xcor_vect(vector)*V.ycor.vect(edge1_frame(frame)),
@@ -47,6 +46,38 @@ var P = function (L, V) {
   };
 
   // painter(what)(where)(canvasContext)
+
+  // origin is canvas center; y going up
+  var segments_painterSICP = segments => (frame, paintFrame) => (ctx, color) => {
+    color = color || '#000000';
+
+    if (paintFrame) frame_painter(frame, ctx, color);
+
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var newCanvasOriginX = canvasWidth / 2;
+    var newCanvasOriginY = canvasHeight / 2;
+    var X = x => x + newCanvasOriginX;
+    var Y = y => -(y + newCanvasOriginY) + canvasHeight;
+
+    var draw_segment = segment => {
+
+      ctx.resetTransform();
+      var coordinateMapper = frame_coord_map(frame);
+      var startPoint = coordinateMapper(start_segment(segment));
+      var endPoint = coordinateMapper(end_segment(segment));
+      ctx.beginPath();
+      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
+      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      ctx.strokeStyle = color;
+      ctx.stroke();
+      ctx.resetTransform();
+    };
+
+    segments.forEach(draw_segment);
+  };
+
+  // origin is canvas top-left corner; y going down
   var segments_painter = segments => (frame, paintFrame) => (ctx, color) => {
     color = color || '#000000';
 
@@ -74,6 +105,52 @@ var P = function (L, V) {
     };
 
     segments.forEach(draw_segment);
+  };
+
+  // origin is canvas center; y going up
+  var single_dot_painterSICP = point => (frame, paintFrame) => (ctx, color) => {
+    color = color || '#000000';
+
+    if (paintFrame) frame_painter(frame, ctx, color);
+
+    var canvasWidth = ctx.canvas.clientWidth;
+    var canvasHeight = ctx.canvas.clientHeight;
+    var newCanvasOriginX = canvasWidth / 2;
+    var newCanvasOriginY = canvasHeight / 2;
+    var X = x => x + newCanvasOriginX;
+    var Y = y => -(y + newCanvasOriginY) + canvasHeight;
+
+    var coordinateMapper = frame_coord_map(frame);
+    var mappedPoint = coordinateMapper(point);
+
+    ctx.resetTransform();
+    ctx.beginPath();
+    // draw a circle with radius 1 pixel
+    ctx.arc(X(V.xcor_vect(mappedPoint)), Y(V.ycor_vect(mappedPoint)), 1, 0, 2 * Math.PI);
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.resetTransform();
+
+  };
+
+  // origin is canvas top-left corner; y going down
+  var single_dot_painter = point => (frame, paintFrame) => (ctx, color) => {
+
+    color = color || '#000000';
+
+    if (paintFrame) frame_painter(frame, ctx, color);
+
+    var coordinateMapper = frame_coord_map(frame);
+    var mappedPoint = coordinateMapper(point);
+
+    ctx.resetTransform();
+    ctx.beginPath();
+    // draw a circle with radius 1 pixel
+    ctx.arc(V.xcor_vect(mappedPoint), V.ycor_vect(mappedPoint), 1, 0, 2 * Math.PI);
+    ctx.strokeStyle = color;
+    ctx.stroke();
+    ctx.resetTransform();
+
   };
 
   var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
@@ -254,6 +331,9 @@ var P = function (L, V) {
     frame_coord_map: frame_coord_map,
     make_segment: make_segment,
     transform_ctx: transform_ctx,
+    single_dot_painterSICP: single_dot_painterSICP,
+    segments_painterSICP: segments_painterSICP,
+    single_dot_painter: single_dot_painter,
     segments_painter: segments_painter,
     picture_painter: picture_painter,
     naked_frame: naked_frame,
