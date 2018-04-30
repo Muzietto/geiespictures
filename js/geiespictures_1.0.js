@@ -164,7 +164,7 @@ var P = function (L, V) {
     ctx.rotate(frameRotationAngle);
 
     ctx.textAlign = textObj.align || 'left';
-    ctx.textBaseline = textObj.baseline|| 'alphabetic';
+    ctx.textBaseline = textObj.baseline || 'alphabetic';
     ctx.font = textObj.font;
     ctx.fillStyle = textObj.color || 'black';
 
@@ -306,40 +306,44 @@ var P = function (L, V) {
 
   var picture_painter = img => (frame, paintFrame) => ctx => {
 
-    ctx.resetTransform();
+    setTimeout(() => {
 
-    var imgWidth = img.width;
-    var imgHeight = img.height;
-    var canvasWidth = ctx.canvas.clientWidth;
-    var canvasHeight = ctx.canvas.clientHeight;
-    var frameWidth = V.length_vect(edge1_frame(frame));
-    var frameHeight = V.length_vect(edge2_frame(frame));
+      ctx.resetTransform();
 
-    var newCanvasOriginX = canvasWidth / 2;
-    var newCanvasOriginY = canvasHeight / 2;
-    ctx.translate(newCanvasOriginX, newCanvasOriginY);
+      var imgWidth = img.width;
+      var imgHeight = img.height;
+      var canvasWidth = ctx.canvas.clientWidth;
+      var canvasHeight = ctx.canvas.clientHeight;
+      var frameWidth = V.length_vect(edge1_frame(frame));
+      var frameHeight = V.length_vect(edge2_frame(frame));
 
-    var mapper = frame_coord_map(frame);
-    var frameOriginX = V.xcor_vect(origin_frame(frame));
-    var frameOriginY = V.ycor_vect(origin_frame(frame));
-    ctx.translate(frameOriginX, -frameOriginY);
+      var newCanvasOriginX = canvasWidth / 2;
+      var newCanvasOriginY = canvasHeight / 2;
+      ctx.translate(newCanvasOriginX, newCanvasOriginY);
 
-    // currently ignoring skewed y-axes
-    var frameRotation = V.angle_vect(edge1_frame(frame));
-    ctx.rotate(-frameRotation);
+      var mapper = frame_coord_map(frame);
+      var frameOriginX = V.xcor_vect(origin_frame(frame));
+      var frameOriginY = V.ycor_vect(origin_frame(frame));
+      ctx.translate(frameOriginX, -frameOriginY);
 
-    // final vertical transfer
-    ctx.translate(0, -frameHeight);
+      // currently ignoring skewed y-axes
+      var frameRotation = V.angle_vect(edge1_frame(frame));
+      ctx.rotate(-frameRotation);
 
-    var imgWidthScale = frameWidth / imgWidth;
-    var imgHeightScale = frameHeight / imgHeight;
-    ctx.scale(imgWidthScale, imgHeightScale);
+      // final vertical transfer
+      ctx.translate(0, -frameHeight);
 
-    // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
-    ctx.drawImage(img, 0, 0);
-    ctx.resetTransform();
+      var imgWidthScale = frameWidth / imgWidth;
+      var imgHeightScale = frameHeight / imgHeight;
+      ctx.scale(imgWidthScale, imgHeightScale);
 
-    if (paintFrame) frame_painter(frame, ctx);
+      // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
+      ctx.drawImage(img, 0, 0);
+      ctx.resetTransform();
+
+      if (paintFrame) frame_painter(frame, ctx);
+
+    }, 100);
   };
 
   var decomposedQs = qs => {

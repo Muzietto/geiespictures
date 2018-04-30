@@ -11,6 +11,8 @@
 var c = document.getElementById('myCanvas');
 var ctx = c.getContext('2d');
 var qsInput = document.getElementById('querystring');
+var screamPic = document.getElementById('scream');
+var rogersPic = document.getElementById('rogers');
 
 var origin = V.make_vect(100, 125);
 var edge1 = V.make_vect(100, 0);
@@ -38,3 +40,9 @@ testo.color = 'red';
 
 P.text_painter(testo)(fram2, true)(ctx);
 
+var picOrigin = V.make_vect(100, 225);
+var edge5 = V.make_vect(100, 0);
+var edge6 = V.make_vect(0, 100);
+var fram3 = P.make_frame(picOrigin, edge5, edge6);
+
+P.picture_painter(screamPic)(fram3,true)(ctx);
