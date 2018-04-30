@@ -55,7 +55,7 @@ describe('an image painter for composite canvases', () => {
       },
     };
 
-    let result = P.decomposedQs(input);
+    let result = IC.decomposedQs(input);
     expect(result).to.be.eql(output);
   });
 
@@ -63,9 +63,51 @@ describe('an image painter for composite canvases', () => {
 
     it('like translated texts', () => {
 
+      var textbox = {
+        x: '123',
+        y: '345',
+        w: '300',
+        h: '100',
+        text: 'lorem ipsum',
+        align: 'L',
+        valign: 'C',
+        valignMethod: 'v',
+        font: '17',
+        fontColor: 'red',
+        maxFontSize: '96',
+        effect: 'null',
+      };
+
+      var resultText = {
+        text: 'lorem ipsum',
+        font: '17px Arial',
+      };
+
+      var resultFrame = P.make_frame(
+        V.make_vect(123, 345),
+        V.make_vect(300, 0),
+        V.make_vect(0, 100)
+      );
+
+      expect()
     });
 
     it('like rotated texts', () => {
+      var textbox = {
+        x: '123',
+        y: '345',
+        w: '300',
+        h: '100',
+        text: 'lorem ipsum',
+        rotateAngleForWholeTextbox: '24',
+        align: 'L',
+        valign: 'C',
+        valignMethod: 'v',
+        font: '17',
+        fontColor: 'red',
+        maxFontSize: '96',
+        effect: 'null',
+      };
 
     });
 
