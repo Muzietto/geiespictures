@@ -89,17 +89,17 @@ window.onload = function () {
   point(canvasWidth / 2, canvasHeight / 2);
   var scream = document.getElementById('scream');
   var rogers = document.getElementById('rogers');
-  //P.picture_painter(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
-  //P.picture_painter(scream)(quarterRightUp,true)(ctx);
-  //P.picture_painter(scream)(deg30ccwFrame,true)(ctx);
+  //P.picture_painterSICP(scream)(quarterRightSkewedDownUpSkewed,true)(ctx);
+  //P.picture_painterSICP(scream)(quarterRightUp,true)(ctx);
+  //P.picture_painterSICP(scream)(deg30ccwFrame,true)(ctx);
 
   P.beside(
     P.atop(
       P.diamond_painter,
-      P.picture_painter(scream)
+      P.picture_painterSICP(scream)
     ),
     P.shrink_to_upper_right(
-      P.picture_painter(rogers)
+      P.picture_painterSICP(rogers)
     )
   )(thirdQuarter)(ctx);
 
@@ -109,17 +109,17 @@ window.onload = function () {
 
   P.diamond_painter(quarterRightUp, true)(ctx);
 
-  P.picture_painter(scream)(fourthQuarter, true)(ctx);
+  P.picture_painterSICP(scream)(fourthQuarter, true)(ctx);
 
-  //P.picture_painter(scream)(quarterLeftDownFromOrigin,true)(ctx);
-  //P.picture_painter(scream)(secondQuarter,true)(ctx);
-  //P.picture_painter(scream)(fourthQuarter,true)(ctx);
+  //P.picture_painterSICP(scream)(quarterLeftDownFromOrigin,true)(ctx);
+  //P.picture_painterSICP(scream)(secondQuarter,true)(ctx);
+  //P.picture_painterSICP(scream)(fourthQuarter,true)(ctx);
 
-  //P.top_split(P.picture_painter(scream),4)(fourthQuarter)(ctx);
-  //P.corner_split(P.picture_painter(rogers),4)(firstQuarter)(ctx);
-  //P.corner_split(P.picture_painter(rogers),4)(secondQuarter)(ctx);
-  //P.corner_split(P.picture_painter(rogers),4)(thirdQuarter)(ctx);
-  //P.corner_split(P.picture_painter(rogers),4)(fourthQuarter)(ctx);
+  //P.top_split(P.picture_painterSICP(scream),4)(fourthQuarter)(ctx);
+  //P.corner_split(P.picture_painterSICP(rogers),4)(firstQuarter)(ctx);
+  //P.corner_split(P.picture_painterSICP(rogers),4)(secondQuarter)(ctx);
+  //P.corner_split(P.picture_painterSICP(rogers),4)(thirdQuarter)(ctx);
+  //P.corner_split(P.picture_painterSICP(rogers),4)(fourthQuarter)(ctx);
 
 };
 
