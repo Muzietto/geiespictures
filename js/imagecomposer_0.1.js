@@ -27,7 +27,9 @@ var IC = function (L, V, P) {
       return arra.reduce((acc, curr) => {
         switch (curr.substr(0, 5)) {
           case 'order': {
-            var canvasBackground = Object.keys(components.bkgImg)[0] || 'nullBackground';
+            var canvasBackground = (components.bkgImg)
+              ? Object.keys(components.bkgImg)[0]
+              : 'nullBackground';
             var canvasComponents = decodeURIComponent(curr.split('=')[1]).split(',');
             acc.order = [canvasBackground].concat(canvasComponents);
           }
@@ -70,7 +72,7 @@ var IC = function (L, V, P) {
       : 0;
     var rotationRads = V.rotation_matrix(Math.PI * rotationDeg / 180);
 
-    var origin = V.make_vect(qsTextboxObj.x, qsTextboxObj.y);
+    var origin = V.make_vect(parseInt(qsTextboxObj.x, 10), parseInt(qsTextboxObj.y, 10));
     var edgeX = V.rotate_vect(V.make_vect(parseInt(qsTextboxObj.w, 10), 0), rotationRads);
     var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsTextboxObj.h, 10)), rotationRads);
 
@@ -105,9 +107,27 @@ var IC = function (L, V, P) {
     };
   }
 
+  function paintFromDecomposedQs(qs, ctx) {
+    var decodQs = decomposedQs(qs);
+
+    decodQs.process.order.forEach(canvasComponentName => {
+
+      var canvasComponentType = /[a-zA-Z]+/.exec(canvasComponentName)[0];
+
+      switch (canvasComponentType) {
+        case 'textbox': {
+          var painterReadyObj = painterReadyText(decodQs.components.textbox[canvasComponentName]);
+
+          P.text_painter(painterReadyObj.object)(painterReadyObj.frame, true)(ctx);
+        }
+      }
+    });
+  }
+
   return {
     decomposedQs: decomposedQs,
     painterReadyText: painterReadyText,
     painterReadyImage: painterReadyImage,
+    paintFromDecomposedQs: paintFromDecomposedQs,
   };
 }(L, V, P);
