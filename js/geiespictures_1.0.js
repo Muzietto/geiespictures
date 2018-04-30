@@ -320,6 +320,49 @@ var P = function (L, V) {
     ctx.resetTransform();
 
     if (paintFrame) frame_painter(frame, ctx);
+  };
+
+  var decomposedQs = qs => {
+
+    var qsPieces = xxx(qs);
+
+    return {
+//      process: processData(qsPieces),
+      components: componentsData(qsPieces),
+    };
+
+    function xxx(string) {
+      return string.split('&'); // TODO filter away null items
+    }
+
+    function processData(arra) {
+      return arra;
+    }
+
+    function componentsData(arra) {
+
+      return arra.reduce((acc, curr) => {
+
+        if (!curr) return acc;
+
+        var qsKey = curr.split('=')[0];
+        var qsValue = curr.split('=')[1];
+        var canvasComponentName = qsKey.split('_')[0];
+        if (canvasComponentName === 'order') return acc;
+
+        var canvasComponentType = /[a-zA-Z]+/.exec(canvasComponentName)[0];
+        var paramName = qsKey.split('_')[1];
+
+        if (!acc[canvasComponentType]) acc[canvasComponentType] = {};
+        if (!acc[canvasComponentType][canvasComponentName])
+          acc[canvasComponentType][canvasComponentName] = {};
+
+        acc[canvasComponentType][canvasComponentName][paramName] = qsValue;
+
+        return acc;
+      }, {});
+    }
+
 
   };
 
@@ -347,6 +390,7 @@ var P = function (L, V) {
     top_split: top_split,
     corner_split: corner_split,
     centered: centered,
-    tree1: tree1
+    tree1: tree1,
+    decomposedQs: decomposedQs,
   };
 }(L, V);
