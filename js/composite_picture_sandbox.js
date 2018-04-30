@@ -34,6 +34,7 @@ var edge4 = V.rotate_vect(V.make_vect(0, 100), rotation);
 var fram2 = P.make_frame(V.make_vect(300, 125), edge3, edge4);
 testo.align = 'center';
 testo.baseline = 'middle';
+testo.color = 'red';
 
 P.text_painter(testo)(fram2, true)(ctx);
 

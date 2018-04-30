@@ -160,12 +160,16 @@ var P = function (L, V) {
     var frameRotationAngle = V.angle_vect(edge1_frame(frame));
 
     ctx.resetTransform();
-    ctx.textAlign = textObj.align || 'left';
-    ctx.textBaseline = textObj.baseline|| 'alphabetic';
     ctx.translate(V.xcor_vect(textPosition), V.ycor_vect(textPosition));
     ctx.rotate(frameRotationAngle);
+
+    ctx.textAlign = textObj.align || 'left';
+    ctx.textBaseline = textObj.baseline|| 'alphabetic';
     ctx.font = textObj.font;
+    ctx.fillStyle = textObj.color || 'black';
+
     ctx.fillText(textObj.text, 0, 0);
+
     ctx.resetTransform();
   };
 
