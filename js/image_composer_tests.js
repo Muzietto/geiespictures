@@ -61,9 +61,9 @@ describe('an image painter for composite canvases', () => {
 
   describe('can convert decomposed querystrings into objects useable by geiespictures', () => {
 
-    it('like traslated texts', () => {
+    it('like traslated+rotated texts', () => {
 
-      var textbox = {
+      var qsTextbox = {
         x: '123',
         y: '345',
         w: '300',
@@ -73,6 +73,7 @@ describe('an image painter for composite canvases', () => {
         valign: 'C',
         valignMethod: 'v',
         font: '17',
+        rotateAngleForWholeTextbox: '30',
         fontColor: 'red',
         maxFontSize: '96',
         effect: 'null',
@@ -81,44 +82,52 @@ describe('an image painter for composite canvases', () => {
       var resultText = {
         text: 'lorem ipsum',
         font: '17px Arial',
+        color: 'red',
       };
+
+      let rotation = V.rotation_matrix(Math.PI / 6);
 
       var resultFrame = P.make_frame(
         V.make_vect(123, 345),
-        V.make_vect(300, 0),
-        V.make_vect(0, 100)
+        V.rotate_vect(V.make_vect(300, 0), rotation),
+        V.rotate_vect(V.make_vect(0, 100), rotation),
       );
 
-      var actual = IC.painterReadyText(textbox);
+      var actual = IC.painterReadyText(qsTextbox);
 
       expect(actual.object).to.be.eql(resultText);
       expect(actual.frame.c).to.be.eql(resultFrame.c);
     });
 
-    it('like rotated texts', () => {
-      var textbox = {
+    it('like traslated+rotated images', () => {
+
+      var qsImage = {
         x: '123',
         y: '345',
         w: '300',
         h: '100',
-        text: 'lorem ipsum',
-        rotateAngleForWholeTextbox: '24',
-        align: 'L',
-        valign: 'C',
-        valignMethod: 'v',
-        font: '17',
-        fontColor: 'red',
-        maxFontSize: '96',
+        url: 'scream',
+        finalRotateAngle: '30',
+        cacheVer: '2',
         effect: 'null',
       };
 
-    });
+      var resultImage = {
+        url: 'scream',
+      };
 
-    it('like translated images', () => {
+      let rotation = V.rotation_matrix(Math.PI / 6);
 
-    });
+      var resultFrame = P.make_frame(
+        V.make_vect(123, 345),
+        V.rotate_vect(V.make_vect(300, 0), rotation),
+        V.rotate_vect(V.make_vect(0, 100), rotation),
+      );
 
-    it('like rotated images', () => {
+      var actual = IC.painterReadyImage(qsImage);
+
+      expect(actual.object).to.be.eql(resultImage);
+      expect(actual.frame.c).to.be.eql(resultFrame.c);
 
     });
   });

@@ -3,7 +3,7 @@
  Author: Marco Faustinelli (contacts@faustinelli.net)
  Web: http://faustinelli.net/
  http://faustinelli.wordpress.com/
- Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.1
+ Version: 0.1 - Requires Geieslists 1.1, Geiesvectors 0.2 and Geiespictures 1.0
 
  The MIT License - Copyright (c) 2016-2018 Geiespictures Project
  */
@@ -65,9 +65,14 @@ var IC = function (L, V, P) {
   }
 
   function painterReadyText(qsTextboxObj) {
+    var rotationDeg = (qsTextboxObj.rotateAngleForWholeTextbox)
+      ? parseFloat(qsTextboxObj.rotateAngleForWholeTextbox)
+      : 0;
+    var rotationRads = V.rotation_matrix(Math.PI * rotationDeg / 180);
+
     var origin = V.make_vect(qsTextboxObj.x, qsTextboxObj.y);
-    var edgeX = V.make_vect(parseInt(qsTextboxObj.w, 10), 0);
-    var edgeY = V.make_vect(0, parseInt(qsTextboxObj.h, 10));
+    var edgeX = V.rotate_vect(V.make_vect(parseInt(qsTextboxObj.w, 10), 0), rotationRads);
+    var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsTextboxObj.h, 10)), rotationRads);
 
     var fontFamily = qsTextboxObj.fontFamily || 'Arial';
     var fontSize = (qsTextboxObj.font || '20') + 'px';
@@ -75,7 +80,26 @@ var IC = function (L, V, P) {
     return {
       object: {
         text: qsTextboxObj.text || 'undefined',
-        font: fontSize + ' ' + fontFamily
+        font: fontSize + ' ' + fontFamily,
+        color: qsTextboxObj.fontColor || 'black',
+      },
+      frame: P.make_frame(origin, edgeX, edgeY),
+    };
+  }
+
+  function painterReadyImage(qsImageObj) {
+    var rotationDeg = (qsImageObj.finalRotateAngle)
+      ? parseFloat(qsImageObj.finalRotateAngle)
+      : 0;
+    var rotationRads = V.rotation_matrix(Math.PI * rotationDeg / 180);
+
+    var origin = V.make_vect(qsImageObj.x, qsImageObj.y);
+    var edgeX = V.rotate_vect(V.make_vect(parseInt(qsImageObj.w, 10), 0), rotationRads);
+    var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsImageObj.h, 10)), rotationRads);
+
+    return {
+      object: {
+        url: qsImageObj.url,
       },
       frame: P.make_frame(origin, edgeX, edgeY),
     };
@@ -84,5 +108,6 @@ var IC = function (L, V, P) {
   return {
     decomposedQs: decomposedQs,
     painterReadyText: painterReadyText,
+    painterReadyImage: painterReadyImage,
   };
 }(L, V, P);
