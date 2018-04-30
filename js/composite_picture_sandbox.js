@@ -21,10 +21,17 @@ var fram1 = P.make_frame(origin, edge1, edge2);
 var testo = {
   text: 'lorem ipsum',
   font: '30px Arial',
-  position: V.make_vect(0, 0),
 };
 
-P.text_painter(testo)(fram1,true)(ctx);
+P.text_painter(testo)(fram1, true)(ctx);
 
 var origgio = V.make_vect(0, 0);
 P.single_dot_painter(origgio)(fram1)(ctx);
+
+let rotation = V.rotation_matrix(Math.PI / 4);
+var edge3 = V.rotate_vect(V.make_vect(100, 0), rotation);
+var edge4 = V.rotate_vect(V.make_vect(0, 100), rotation);
+var fram2 = P.make_frame(V.make_vect(300, 125), edge3, edge4);
+
+P.text_painter(testo)(fram2, true)(ctx);
+
