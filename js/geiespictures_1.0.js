@@ -3,7 +3,7 @@
  Author: Marco Faustinelli (contacts@faustinelli.net)
  Web: http://faustinelli.net/
  http://faustinelli.wordpress.com/
- Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.1
+ Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.2
 
  The MIT License - Copyright (c) 2016-2018 Geiespictures Project
  */
