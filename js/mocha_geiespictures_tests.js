@@ -402,7 +402,7 @@ describe('a sound picture system entails', function () {
 
     describe('a text_painter that draws a text at the right DOM canvas pixel coords', function () {
 
-      it('while the text is specified in a translated frame', () => {
+      it('while the text is specified in a traslated frame', () => {
         var origin = V.make_vect(100, 25);
         var edge1 = V.make_vect(100, 0);
         var edge2 = V.make_vect(0, 100);
