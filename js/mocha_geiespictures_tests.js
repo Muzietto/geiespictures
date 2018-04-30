@@ -53,7 +53,7 @@ var fakeCtx = () => probe => {
   };
 };
 
-describe.only('an image painter for composite canvases', () => {
+describe('an image painter for composite canvases', () => {
 
   it('groups data belonging to different graphic components', () => {
 
@@ -98,12 +98,14 @@ describe.only('an image painter for composite canvases', () => {
     let result = P.decomposedQs(input);
     expect(result).to.be.eql(output);
   });
-})
-;
+
+  it('can draw a background', () => {});
+
+});
 
 describe('a sound picture system requires', function () {
 
-  it('a series of vector operations that allow to measure, sum, subtract, scale, rotate and align  vectors', function () {
+  it('a series of vector operations that allow to measure, sum, subtract, scale, rotate and align vectors', function () {
 
     var pippo = V.make_vect(-3, 1);
     var pluto = V.make_vect(-2, 3);
@@ -346,7 +348,6 @@ describe('a sound picture system entails', function () {
       expect(testProbe.startY).to.be.equal(75);
       expect(testProbe.endX).to.be.equal(0);
       expect(testProbe.endY).to.be.equal(25);
-
     });
 
   });
@@ -377,16 +378,15 @@ describe('a sound picture system entails', function () {
       expect(testProbe.centerX).to.be.equal(200);
       expect(testProbe.centerY).to.be.equal(125);
 
-      // TODO: verify rotations
+      // TODO: verify points in rotated frames
 
     });
 
     it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function () {
 
-      // TODO - adjust from here
-      var origin = V.make_vect(-100, 25);
-      var edge1 = V.make_vect(0, 50);
-      var edge2 = V.make_vect(-100, 0);
+      var origin = V.make_vect(100, 25);
+      var edge1 = V.make_vect(100, 0);
+      var edge2 = V.make_vect(0, 100);
       var fram1 = P.make_frame(origin, edge1, edge2);
 
       var testProbe = probe();
@@ -396,9 +396,9 @@ describe('a sound picture system entails', function () {
       P.segments_painter([P.make_segment(V.make_vect(0, 0), V.make_vect(1, 1))])(fram1)(fakeContext);
 
       expect(testProbe.startX).to.be.equal(100);
-      expect(testProbe.startY).to.be.equal(75);
-      expect(testProbe.endX).to.be.equal(0);
-      expect(testProbe.endY).to.be.equal(25);
+      expect(testProbe.startY).to.be.equal(25);
+      expect(testProbe.endX).to.be.equal(200);
+      expect(testProbe.endY).to.be.equal(125);
 
     });
   });

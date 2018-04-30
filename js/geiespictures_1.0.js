@@ -83,22 +83,16 @@ var P = function (L, V) {
 
     if (paintFrame) frame_painter(frame, ctx, color);
 
-    var canvasWidth = ctx.canvas.clientWidth;
-    var canvasHeight = ctx.canvas.clientHeight;
-    var newCanvasOriginX = canvasWidth / 2;
-    var newCanvasOriginY = canvasHeight / 2;
-    var X = x => x + newCanvasOriginX;
-    var Y = y => -(y + newCanvasOriginY) + canvasHeight;
+    var coordinateMapper = frame_coord_map(frame);
 
     var draw_segment = segment => {
 
       ctx.resetTransform();
-      var coordinateMapper = frame_coord_map(frame);
       var startPoint = coordinateMapper(start_segment(segment));
       var endPoint = coordinateMapper(end_segment(segment));
       ctx.beginPath();
-      ctx.moveTo(X(V.xcor_vect(startPoint)), Y(V.ycor_vect(startPoint)));
-      ctx.lineTo(X(V.xcor_vect(endPoint)), Y(V.ycor_vect(endPoint)));
+      ctx.moveTo(V.xcor_vect(startPoint), V.ycor_vect(startPoint));
+      ctx.lineTo(V.xcor_vect(endPoint), V.ycor_vect(endPoint));
       ctx.strokeStyle = color;
       ctx.stroke();
       ctx.resetTransform();
