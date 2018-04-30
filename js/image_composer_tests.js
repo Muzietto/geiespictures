@@ -61,7 +61,7 @@ describe('an image painter for composite canvases', () => {
 
   describe('can convert decomposed querystrings into objects useable by geiespictures', () => {
 
-    it('like translated texts', () => {
+    it('like traslated texts', () => {
 
       var textbox = {
         x: '123',
@@ -89,7 +89,10 @@ describe('an image painter for composite canvases', () => {
         V.make_vect(0, 100)
       );
 
-      expect()
+      var actual = IC.painterReadyText(textbox);
+
+      expect(actual.object).to.be.eql(resultText);
+      expect(actual.frame.c).to.be.eql(resultFrame.c);
     });
 
     it('like rotated texts', () => {

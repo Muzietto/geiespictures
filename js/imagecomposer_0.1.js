@@ -9,7 +9,7 @@
  */
 var IC = function (L, V, P) {
 
-  var decomposedQs = qs => {
+  function decomposedQs(qs) {
 
     var qsPieces = splitQuerystring(qs);
     var components = componentsData(qsPieces);
@@ -62,9 +62,27 @@ var IC = function (L, V, P) {
       }, {});
     }
 
-  };
+  }
+
+  function painterReadyText(qsTextboxObj) {
+    var origin = V.make_vect(qsTextboxObj.x, qsTextboxObj.y);
+    var edgeX = V.make_vect(parseInt(qsTextboxObj.w, 10), 0);
+    var edgeY = V.make_vect(0, parseInt(qsTextboxObj.h, 10));
+
+    var fontFamily = qsTextboxObj.fontFamily || 'Arial';
+    var fontSize = (qsTextboxObj.font || '20') + 'px';
+
+    return {
+      object: {
+        text: qsTextboxObj.text || 'undefined',
+        font: fontSize + ' ' + fontFamily
+      },
+      frame: P.make_frame(origin, edgeX, edgeY),
+    };
+  }
 
   return {
     decomposedQs: decomposedQs,
+    painterReadyText: painterReadyText,
   };
 }(L, V, P);
