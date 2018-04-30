@@ -19,6 +19,7 @@ var probe = () => {
 
 var fakeCtx = () => probe => {
   return {
+    font: '',
     canvas: {
       clientWidth: 400,
       clientHeight: 200
@@ -40,6 +41,11 @@ var fakeCtx = () => probe => {
       probe.centerY = cy;
       probe.radius = r;
     },
+    fillText: (text, x, y) => {
+      probe.textPosX = x;
+      probe.textPosY = y;
+      probe.text = text;
+    },
     stroke: () => {
     },
     transform: (m11, m21, m12, m22, m13, m23) => {
@@ -59,8 +65,8 @@ describe('an image painter for composite canvases', () => {
 
     var input = '&textbox1_x=123&textbox2_x=234' +
       '&image0_url=some_url&bkgImg12_url=some_other_url' +
-      '&order=image0%2Ctextbox1%2Ctextbox2'+
-    '&textbox1_y=345&textbox2_valign=C';
+      '&order=image0%2Ctextbox1%2Ctextbox2' +
+      '&textbox1_y=345&textbox2_valign=C';
 
     var output = {
       process: {
@@ -99,7 +105,8 @@ describe('an image painter for composite canvases', () => {
     expect(result).to.be.eql(output);
   });
 
-  it('can draw a background', () => {});
+  it('can draw a background', () => {
+  });
 
 });
 
@@ -353,32 +360,57 @@ describe('a sound picture system entails', function () {
   });
 
   describe('painters that use the native origin and coordinates of a canvas, like', () => {
-    it('a single_dot_painter that takes a point in a frame and converts its coordinates into DOM canvas pixel coords', function () {
+    describe('a single_dot_painter that takes a point in a frame and converts its coordinates into DOM canvas pixel coords', function () {
+      it('for translated frames', () => {
+        var origin = V.make_vect(100, 25);
+        var edge1 = V.make_vect(100, 0);
+        var edge2 = V.make_vect(0, 100);
+        var fram1 = P.make_frame(origin, edge1, edge2);
 
-      var origin = V.make_vect(100, 25);
-      var edge1 = V.make_vect(100, 0);
-      var edge2 = V.make_vect(0, 100);
-      var fram1 = P.make_frame(origin, edge1, edge2);
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
 
-      var testProbe = probe();
-      var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painter(origgio)(fram1)(fakeContext);
 
-      // drawing a point in the frame origin
-      var origgio = V.make_vect(0, 0);
-      P.single_dot_painter(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+        expect(testProbe.radius).to.be.equal(1);
 
-      expect(testProbe.centerX).to.be.equal(100);
-      expect(testProbe.centerY).to.be.equal(25);
-      expect(testProbe.radius).to.be.equal(1);
+        // drawing a point at (1,1) in the frame reference
+        var unouno = V.make_vect(1, 1);
+        P.single_dot_painter(unouno)(fram1)(fakeContext);
 
-      // drawing a point at (1,1) in the frame reference
-      var unouno = V.make_vect(1, 1);
-      P.single_dot_painter(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(125);
 
-      expect(testProbe.centerX).to.be.equal(200);
-      expect(testProbe.centerY).to.be.equal(125);
+      });
 
-      // TODO: verify points in rotated frames
+      it('for rotated frames', () => {
+        var origin = V.make_vect(100, 25);
+        var edge1 = V.make_vect(100, 100);
+        var edge2 = V.make_vect(-100, 100);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painter(origgio)(fram1)(fakeContext);
+
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+        expect(testProbe.radius).to.be.equal(1);
+
+        // drawing a point at (1,1) in the frame reference
+        var unouno = V.make_vect(1, 1);
+        P.single_dot_painter(unouno)(fram1)(fakeContext);
+
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(225);
+      });
 
     });
 
@@ -399,6 +431,65 @@ describe('a sound picture system entails', function () {
       expect(testProbe.startY).to.be.equal(25);
       expect(testProbe.endX).to.be.equal(200);
       expect(testProbe.endY).to.be.equal(125);
+
+    });
+
+    describe('a text_painter that draws a text at the right DOM canvas pixel coords', function () {
+
+      it('while the text is specified in a translated frame', () => {
+        var origin = V.make_vect(100, 25);
+        var edge1 = V.make_vect(100, 0);
+        var edge2 = V.make_vect(0, 100);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a text in the frame origin
+        var testo = {
+          text: 'lorem ipsum',
+          font: '30px Arial',
+          position: V.make_vect(0, 0)
+        };
+        P.text_painter(testo)(fram1)(fakeContext);
+
+        expect(testProbe.textPosX).to.be.equal(100);
+        expect(testProbe.textPosY).to.be.equal(25);
+        expect(testProbe.text).to.be.equal('lorem ipsum');
+        expect(fakeContext.font).to.be.equal('30px Arial');
+
+        // drawing a text at (1,1) in the frame reference
+        testo.position = V.make_vect(1, 1);
+        P.text_painter(testo)(fram1)(fakeContext);
+
+        expect(testProbe.textPosX).to.be.equal(200);
+        expect(testProbe.textPosY).to.be.equal(125);
+      });
+
+      xit('while the text is specified in a rotated frame', () => {
+        var origin = V.make_vect(100, 25);
+        var edge1 = V.make_vect(100, 100);
+        var edge2 = V.make_vect(-100, 100);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painter(origgio)(fram1)(fakeContext);
+
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+        expect(testProbe.radius).to.be.equal(1);
+
+        // drawing a point at (1,1) in the frame reference
+        var unouno = V.make_vect(1, 1);
+        P.single_dot_painter(unouno)(fram1)(fakeContext);
+
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(225);
+      });
 
     });
   });

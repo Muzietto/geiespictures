@@ -147,6 +147,22 @@ var P = function (L, V) {
 
   };
 
+  // origin is canvas top-left corner; y going down
+  var text_painter = textObj => (frame, paintFrame) => (ctx, color) => {
+
+    color = color || '#000000';
+
+    if (paintFrame) frame_painter(frame, ctx, color);
+
+    var coordinateMapper = frame_coord_map(frame);
+    var textPosition = coordinateMapper(textObj.position);
+
+    ctx.resetTransform();
+    ctx.font = textObj.font;
+    ctx.fillText(textObj.text, V.xcor_vect(textPosition), V.ycor_vect(textPosition));
+    ctx.resetTransform();
+  };
+
   var transform_painter = (painter, origin, xAxis, yAxis) => (frame, paintFrame) => {
 
     var mapper = frame_coord_map(frame);
@@ -384,6 +400,7 @@ var P = function (L, V) {
     segments_painterSICP: segments_painterSICP,
     single_dot_painter: single_dot_painter,
     segments_painter: segments_painter,
+    text_painter: text_painter,
     picture_painter: picture_painter,
     naked_frame: naked_frame,
     diamond_painter: diamond_painter,
