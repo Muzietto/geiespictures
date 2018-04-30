@@ -63,14 +63,14 @@ describe.only('an image painter for composite canvases', () => {
     '&textbox1_y=345&textbox2_valign=C';
 
     var output = {
-      // process: {
-      //   order: [
-      //     'bkgImg12',
-      //     'image0',
-      //     'textbox1',
-      //     'textbox2',
-      //   ],
-      // },
+      process: {
+        order: [
+          'bkgImg12',
+          'image0',
+          'textbox1',
+          'textbox2',
+        ],
+      },
       components: {
         image: {
           image0: {

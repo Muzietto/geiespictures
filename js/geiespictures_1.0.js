@@ -324,19 +324,31 @@ var P = function (L, V) {
 
   var decomposedQs = qs => {
 
-    var qsPieces = xxx(qs);
+    var qsPieces = splitQuerystring(qs);
+    var components = componentsData(qsPieces);
 
     return {
-//      process: processData(qsPieces),
-      components: componentsData(qsPieces),
+      process: processData(qsPieces, components),
+      components: components,
     };
 
-    function xxx(string) {
+    function splitQuerystring(string) {
       return string.split('&'); // TODO filter away null items
     }
 
-    function processData(arra) {
-      return arra;
+    function processData(arra, components) {
+      return arra.reduce((acc, curr) => {
+        switch (curr.substr(0, 5)) {
+          case 'order': {
+            var canvasBackground = Object.keys(components.bkgImg)[0] || 'nullBackground';
+            var canvasComponents = decodeURIComponent(curr.split('=')[1]).split(',');
+            acc.order = [canvasBackground].concat(canvasComponents);
+          }
+          default: {
+          }
+        }
+        return acc;
+      }, {});
     }
 
     function componentsData(arra) {
