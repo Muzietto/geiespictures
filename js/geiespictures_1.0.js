@@ -156,10 +156,13 @@ var P = function (L, V) {
 
     var coordinateMapper = frame_coord_map(frame);
     var textPosition = coordinateMapper(textObj.position || V.make_vect(0, 0));
+    var frameRotationAngle = V.angle_vect(edge1_frame(frame));
 
     ctx.resetTransform();
+    ctx.translate(V.xcor_vect(textPosition), V.ycor_vect(textPosition));
+    ctx.rotate(frameRotationAngle);
     ctx.font = textObj.font;
-    ctx.fillText(textObj.text, V.xcor_vect(textPosition), V.ycor_vect(textPosition));
+    ctx.fillText(textObj.text, 0, 0);
     ctx.resetTransform();
   };
 

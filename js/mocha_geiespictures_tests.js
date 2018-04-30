@@ -14,7 +14,10 @@ var expect = chai.expect;
 //		expect(isEmpty(tail(EMPTY))).to.be.not.ok;
 
 var probe = () => {
-  return {};
+  return {
+    origin: {x: 0, y: 0},
+    rotation: 0,
+  };
 };
 
 var fakeCtx = () => probe => {
@@ -25,6 +28,13 @@ var fakeCtx = () => probe => {
       clientHeight: 200
     },
     resetTransform: () => {
+    },
+    translate: (x, y) => {
+      probe.origin.x = x;
+      probe.origin.y = y;
+    },
+    rotate: (rotation) => {
+      probe.rotation = rotation;
     },
     beginPath: () => {
     },
@@ -42,8 +52,8 @@ var fakeCtx = () => probe => {
       probe.radius = r;
     },
     fillText: (text, x, y) => {
-      probe.textPosX = x;
-      probe.textPosY = y;
+      probe.textPosX = probe.origin.x + x;
+      probe.textPosY = probe.origin.y + y;
       probe.text = text;
     },
     stroke: () => {
