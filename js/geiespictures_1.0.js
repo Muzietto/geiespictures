@@ -381,37 +381,20 @@ var P = function (L, V) {
     }, 100);
   };
 
-  var picture_painterSICP = img => (frame, paintFrame) => ctx => {
+  // origin is canvas top-left corner; y going down
+  var background_painter = img => (frame, paintFrame) => ctx => {
 
     setTimeout(() => {
-
-      ctx.resetTransform();
 
       var imgWidth = img.width;
       var imgHeight = img.height;
       var canvasWidth = ctx.canvas.clientWidth;
       var canvasHeight = ctx.canvas.clientHeight;
-      var frameWidth = V.length_vect(edge1_frame(frame));
-      var frameHeight = V.length_vect(edge2_frame(frame));
 
-      var newCanvasOriginX = canvasWidth / 2;
-      var newCanvasOriginY = canvasHeight / 2;
-      ctx.translate(newCanvasOriginX, newCanvasOriginY);
+      ctx.resetTransform();
 
-      var mapper = frame_coord_map(frame);
-      var frameOriginX = V.xcor_vect(origin_frame(frame));
-      var frameOriginY = V.ycor_vect(origin_frame(frame));
-      ctx.translate(frameOriginX, -frameOriginY);
-
-      // currently ignoring skewed y-axes
-      var frameRotation = V.angle_vect(edge1_frame(frame));
-      ctx.rotate(-frameRotation);
-
-      // final vertical transfer
-      ctx.translate(0, -frameHeight);
-
-      var imgWidthScale = frameWidth / imgWidth;
-      var imgHeightScale = frameHeight / imgHeight;
+      var imgWidthScale = canvasWidth / imgWidth;
+      var imgHeightScale = canvasHeight / imgHeight;
       ctx.scale(imgWidthScale, imgHeightScale);
 
       // transform(a,b,c,d,e,f) = (hor.scal., hor.skew., vertskew., vert.scal., hor.mov., vert.mov.)
@@ -494,6 +477,7 @@ var P = function (L, V) {
     text_painter: text_painter,
     picture_painterSICP: picture_painterSICP,
     picture_painter: picture_painter,
+    background_painter: background_painter,
     naked_frame: naked_frame,
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
