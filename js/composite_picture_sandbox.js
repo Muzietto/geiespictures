@@ -6,11 +6,11 @@
  Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.1
 
  The MIT License - Copyright (c) 2016-2018 Geiespictures Project
- */
+*/
 
 var c = document.getElementById('myCanvas');
 var ctx = c.getContext('2d');
-var qsInput = document.getElementById('querystring');
+var qsTextarea = document.getElementById('querystring');
 var screamPic = document.getElementById('scream');
 var rogersPic = document.getElementById('rogers');
 var gwenPic = document.getElementById('gwen');
@@ -18,7 +18,6 @@ var gwenPic = document.getElementById('gwen');
 P.background_painter(gwenPic)()(ctx);
 
 setTimeout(() => {
-
 
   var origin = V.make_vect(100, 125);
   var edge1 = V.make_vect(100, 0);
