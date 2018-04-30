@@ -32,6 +32,8 @@ let rotation = V.rotation_matrix(Math.PI / 4);
 var edge3 = V.rotate_vect(V.make_vect(100, 0), rotation);
 var edge4 = V.rotate_vect(V.make_vect(0, 100), rotation);
 var fram2 = P.make_frame(V.make_vect(300, 125), edge3, edge4);
+testo.align = 'center';
+testo.baseline = 'middle';
 
 P.text_painter(testo)(fram2, true)(ctx);
 
