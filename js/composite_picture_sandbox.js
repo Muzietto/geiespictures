@@ -3,7 +3,7 @@
  Author: Marco Faustinelli (contacts@faustinelli.net)
  Web: http://faustinelli.net/
  http://faustinelli.wordpress.com/
- Version: 0.1 - Requires Geieslists 1.1 and Geiesvectors 0.1
+ Version: 1.0 - Requires Geieslists 1.1 and Geiesvectors 0.1
 
  The MIT License - Copyright (c) 2016-2018 Geiespictures Project
  */
@@ -21,7 +21,7 @@ var fram1 = P.make_frame(origin, edge1, edge2);
 var testo = {
   text: 'lorem ipsum',
   font: '30px Arial',
-  position: V.make_vect(0, 0)
+  position: V.make_vect(0, 0),
 };
 
 P.text_painter(testo)(fram1,true)(ctx);

@@ -155,7 +155,7 @@ var P = function (L, V) {
     if (paintFrame) frame_painter(frame, ctx, color);
 
     var coordinateMapper = frame_coord_map(frame);
-    var textPosition = coordinateMapper(textObj.position);
+    var textPosition = coordinateMapper(textObj.position || V.make_vect(0, 0));
 
     ctx.resetTransform();
     ctx.font = textObj.font;
