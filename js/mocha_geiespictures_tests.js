@@ -474,6 +474,8 @@ describe('a sound picture system entails', function () {
       });
 
       it('while the text is specified in a rotated frame', () => {
+
+        // edges at PI/4 clockwise
         var origin = V.make_vect(100, 25);
         let rotation = V.rotation_matrix(Math.PI / 4);
         var edge1 = V.rotate_vect(V.make_vect(100, 0), rotation);
