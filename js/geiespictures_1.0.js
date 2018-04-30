@@ -103,6 +103,7 @@ var P = function (L, V) {
 
   // origin is canvas center; y going up
   var single_dot_painterSICP = point => (frame, paintFrame) => (ctx, color) => {
+
     color = color || '#000000';
 
     if (paintFrame) frame_painter(frame, ctx, color);
@@ -159,6 +160,8 @@ var P = function (L, V) {
     var frameRotationAngle = V.angle_vect(edge1_frame(frame));
 
     ctx.resetTransform();
+    ctx.textAlign = textObj.align || 'left';
+    ctx.textBaseline = textObj.baseline|| 'alphabetic';
     ctx.translate(V.xcor_vect(textPosition), V.ycor_vect(textPosition));
     ctx.rotate(frameRotationAngle);
     ctx.font = textObj.font;
