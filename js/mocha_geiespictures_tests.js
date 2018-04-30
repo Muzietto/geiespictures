@@ -53,6 +53,54 @@ var fakeCtx = () => probe => {
   };
 };
 
+describe.only('an image painter for composite canvases', () => {
+
+  it('groups data belonging to different graphic components', () => {
+
+    var input = '&textbox1_x=123&textbox2_x=234' +
+      '&image0_url=some_url&bkgImg12_url=some_other_url' +
+      '&order=image0%2Ctextbox1%2Ctextbox2'+
+    '&textbox1_y=345&textbox2_valign=C';
+
+    var output = {
+      // process: {
+      //   order: [
+      //     'bkgImg12',
+      //     'image0',
+      //     'textbox1',
+      //     'textbox2',
+      //   ],
+      // },
+      components: {
+        image: {
+          image0: {
+            url: 'some_url',
+          },
+        },
+        bkgImg: {
+          bkgImg12: {
+            url: 'some_other_url',
+          },
+        },
+        textbox: {
+          textbox1: {
+            x: '123',
+            y: '345',
+          },
+          textbox2: {
+            x: '234',
+            valign: 'C',
+          },
+        },
+      },
+    };
+
+    let result = P.decomposedQs(input);
+    expect(result).to.be.eql(output);
+  });
+})
+;
+
 describe('a sound picture system requires', function () {
 
   it('a series of vector operations that allow to measure, sum, subtract, scale, rotate and align  vectors', function () {
@@ -335,7 +383,7 @@ describe('a sound picture system entails', function () {
 
     it('a segments painter that maps frames into DOM canvas, adapting the coordinates', function () {
 
-      // TODO - adjust fomr here
+      // TODO - adjust from here
       var origin = V.make_vect(-100, 25);
       var edge1 = V.make_vect(0, 50);
       var edge2 = V.make_vect(-100, 0);
