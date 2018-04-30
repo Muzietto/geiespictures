@@ -21,7 +21,8 @@ var V = geiesvectors = function (L) {
       _23: () => m23,
       _31: () => m31,
       _32: () => m32,
-      _33: () => m33
+      _33: () => m33,
+      isMatrix: true,
     };
   };
 
@@ -72,7 +73,7 @@ var V = geiesvectors = function (L) {
   );
 
   var rotate_vect = (vector, direction) => {
-    var rotationMatrix = rotation_matrix(angle_vect(direction));
+    var rotationMatrix = (direction.isMatrix) ? direction : rotation_matrix(angle_vect(direction));
     var rotatedVector = _prod_matrix_vect(rotationMatrix, vector);
     return rotatedVector;
   };

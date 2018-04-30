@@ -133,11 +133,18 @@ describe('a sound picture system requires', function () {
     expect(V.angle_vect(deg30)).to.be.lt(0.524);
 
     var deg45 = V.make_vect(1, 1);
-    var deg75 = V.rotate_vect(deg30, deg45);
-    expect(V.length_vect(deg75)).to.be.gt(0.999);
-    expect(V.length_vect(deg75)).to.be.lt(1.001);
-    expect((V.angle_vect(deg75) / 7.5) * 18).to.be.lt(3.141593);
-    expect((V.angle_vect(deg75) / 7.5) * 18).to.be.gt(3.141592);
+    // rotated direction given by a vector
+    var deg75v = V.rotate_vect(deg30, deg45);
+    expect(V.length_vect(deg75v)).to.be.gt(0.999);
+    expect(V.length_vect(deg75v)).to.be.lt(1.001);
+    expect((V.angle_vect(deg75v) / 7.5) * 18).to.be.lt(3.141593);
+    expect((V.angle_vect(deg75v) / 7.5) * 18).to.be.gt(3.141592);
+    // rotated direction given by a matrix
+    var deg75m = V.rotate_vect(deg30, V.rotation_matrix(Math.PI / 4));
+    expect(V.length_vect(deg75m)).to.be.gt(0.999);
+    expect(V.length_vect(deg75m)).to.be.lt(1.001);
+    expect((V.angle_vect(deg75m) / 7.5) * 18).to.be.lt(3.141593);
+    expect((V.angle_vect(deg75m) / 7.5) * 18).to.be.gt(3.141592);
 
     var aligned = V.align_vect(pippo, deg45);
     expect(V.length_vect(aligned)).to.be.gt(3.16);
@@ -449,7 +456,7 @@ describe('a sound picture system entails', function () {
         var testo = {
           text: 'lorem ipsum',
           font: '30px Arial',
-          position: V.make_vect(0, 0)
+          position: V.make_vect(0, 0),
         };
         P.text_painter(testo)(fram1)(fakeContext);
 
@@ -466,29 +473,36 @@ describe('a sound picture system entails', function () {
         expect(testProbe.textPosY).to.be.equal(125);
       });
 
-      xit('while the text is specified in a rotated frame', () => {
+      it('while the text is specified in a rotated frame', () => {
         var origin = V.make_vect(100, 25);
-        var edge1 = V.make_vect(100, 100);
-        var edge2 = V.make_vect(-100, 100);
+        let rotation = V.rotation_matrix(Math.PI / 4);
+        var edge1 = V.rotate_vect(V.make_vect(100, 0), rotation);
+        var edge2 = V.rotate_vect(V.make_vect(0, 100), rotation);
         var fram1 = P.make_frame(origin, edge1, edge2);
 
         var testProbe = probe();
         var fakeContext = fakeCtx()(testProbe); // canvas 400x200
 
-        // drawing a point in the frame origin
-        var origgio = V.make_vect(0, 0);
-        P.single_dot_painter(origgio)(fram1)(fakeContext);
+        // drawing a text in the frame origin
+        var testo = {
+          text: 'lorem ipsum',
+          font: '30px Arial',
+          position: V.make_vect(0, 0),
+        };
+        P.text_painter(testo)(fram1)(fakeContext);
 
-        expect(testProbe.centerX).to.be.equal(100);
-        expect(testProbe.centerY).to.be.equal(25);
-        expect(testProbe.radius).to.be.equal(1);
+        expect(testProbe.textPosX).to.be.equal(100);
+        expect(testProbe.textPosY).to.be.equal(25);
+        expect(testProbe.text).to.be.equal('lorem ipsum');
+        expect(fakeContext.font).to.be.equal('30px Arial');
 
-        // drawing a point at (1,1) in the frame reference
-        var unouno = V.make_vect(1, 1);
-        P.single_dot_painter(unouno)(fram1)(fakeContext);
+        // drawing a text at (1,1) in the frame reference
+        testo.position = V.make_vect(1, 1);
+        P.text_painter(testo)(fram1)(fakeContext);
 
-        expect(testProbe.centerX).to.be.equal(100);
-        expect(testProbe.centerY).to.be.equal(225);
+        expect(testProbe.textPosX).to.be.closeTo(100, 1e-5);
+        expect(testProbe.textPosY).to.be.closeTo(166.42135, 1e-5);
+        expect(testProbe.textPosY).to.be.closeTo(166.42135, 1e-5);
       });
 
     });
