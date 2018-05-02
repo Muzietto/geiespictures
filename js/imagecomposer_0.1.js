@@ -102,9 +102,27 @@ var IC = function (L, V, P) {
         color: qsTextboxObj.fontColor || 'black',
         width: qsTextboxObj.w,
         height: qsTextboxObj.h,
+        align: alignMapper(qsTextboxObj.align || 'left'),
+        baseline: valignMapper(qsTextboxObj.valign || 'hanging'),
       },
       frame: P.make_frame(origin, edgeX, edgeY),
     };
+
+    function alignMapper(str) {
+      return {
+        L: 'left',
+        C: 'center',
+        R: 'right',
+      }[str];
+    }
+
+    function valignMapper(str) {
+      return {
+        B: 'hanging',
+        M: 'middle',
+        A: 'alphabetic',
+      }[str];
+    }
   }
 
   function painterReadyImage(qsImageObj) {
