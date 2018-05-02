@@ -4,13 +4,31 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <style>
         .horizon {
+            font-family: arial, sans-serif;
             width: 1000px;
             margin: 0 auto;
         }
+
         canvas {
             border: 3px solid green;
             border-radius: 5px;
+            margin-top: 20px;
         }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 26px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
     </style>
     <title>IC</title>
     <script src="js/lib/geieslists_1.1.js"></script>
@@ -23,8 +41,11 @@
 <img id="scream" src="img/little_scream.jpg" style="display:none;"></img>
 <img id="rogers" src="img/rogers.gif" style="display:none;"></img>
 <div class="horizon">
+
     <div id="canvasParent"></div>
-    <button id="theButton" style="margin-bottom:5px;">REDRAW</button>
+    <button id="theButton" style="margin-bottom:5px;float:left;">REDRAW</button>
+    <h1 style="float:right">Change the textarea content and click REDRAW</h1>
+    <br clear="both"/>
     <textarea
         style="width:100%;height:200px"
         id="querystring">&custImg0_url=rogers&custImg0_finalRotateAngle=-15&custImg0_x=500&custImg0_y=50&custImg0_h=400&custImg0_w=350&bkgImg12_url=gwen&order=custImg2%2CcustImg0%2CcustImg1%2Ctextbox0%2Ctextbox1&textbox1_x=123&textbox1_effect=null&textbox1_h=100&textbox1_w=300&textbox1_font=17&textbox1_text=lorem%20ipsum&textbox1_align=L&textbox1_y=145&textbox1_valign=M&textbox1_maxFontSize=96&textbox1_valignMethod=v&textbox1_rotateAngleForWholeTextbox=30&resol=1000x650&custImg1_x=20&custImg1_y=100&custImg1_h=200&custImg1_w=150&custImg1_url=scream&custImg2_x=40&custImg2_y=250&custImg2_h=200&custImg2_w=150&custImg2_url=scream&textbox0_x=1000&textbox0_effect=null&textbox0_h=100&textbox0_w=900&textbox0_font=17&textbox0_fontColor=red&textbox0_text=lorem%20ipsum&textbox0_align=R&textbox0_y=650&textbox0_valign=A&textbox0_maxFontSize=400</textarea>
