@@ -78,6 +78,7 @@ var IC = function (L, V, P) {
   }
 
   function painterReadyText(qsTextboxObj) {
+
     var rotationDeg = (qsTextboxObj.rotateAngleForWholeTextbox)
       ? parseFloat(qsTextboxObj.rotateAngleForWholeTextbox)
       : 0;
@@ -92,7 +93,7 @@ var IC = function (L, V, P) {
 
     return {
       object: {
-        text: qsTextboxObj.text || 'undefined',
+        text: decodeURIComponent(qsTextboxObj.text) || 'undefined',
         font: fontSize + ' ' + fontFamily,
         color: qsTextboxObj.fontColor || 'black',
       },
@@ -101,6 +102,7 @@ var IC = function (L, V, P) {
   }
 
   function painterReadyImage(qsImageObj) {
+
     var rotationDeg = (qsImageObj.finalRotateAngle)
       ? parseFloat(qsImageObj.finalRotateAngle)
       : 0;
@@ -118,6 +120,20 @@ var IC = function (L, V, P) {
     };
   }
 
+  function painterReadyBackground(qsBackgroundObj) {
+
+    //var origin = V.make_vect(0, 0);
+    //var edgeX = V.make_vect(ctx.canvas.clientWidth, 0);
+    //var edgeY = V.make_vect(0, ctx.canvas.clientHeight);
+
+    return {
+      object: {
+        url: qsBackgroundObj.url,
+      },
+      //frame: P.make_frame(origin, edgeX, edgeY),
+    };
+  }
+
   function paintDecomposedQs(qs, ctx) {
     var PAINT_CONTROL_FRAME = true;
     var decodQs = decomposedQs(qs);
@@ -132,7 +148,10 @@ var IC = function (L, V, P) {
         case 'textbox': {
           var painterReadyObj = painterReadyText(decodQs.components.textbox[canvasComponentName]);
 
-          P.text_painter(painterReadyObj.object)(painterReadyObj.frame, PAINT_CONTROL_FRAME)(ctx);
+          setTimeout(() => {
+
+            P.text_painter(painterReadyObj.object)(painterReadyObj.frame, PAINT_CONTROL_FRAME)(ctx);
+          }, 200);
 
           break;
         }
@@ -145,6 +164,15 @@ var IC = function (L, V, P) {
 
           break;
         }
+        case 'bkgImg': {
+          var painterReadyObj = painterReadyBackground(decodQs.components.bkgImg[canvasComponentName]);
+
+          var img = document.getElementById(painterReadyObj.object.url);
+          // TODO - put here promise-based logic for url retrieval instead of previous line
+          P.background_painter(img)()(ctx);
+
+          break;
+        }
       }
     });
   }
@@ -153,6 +181,7 @@ var IC = function (L, V, P) {
     decomposedQs: decomposedQs,
     painterReadyText: painterReadyText,
     painterReadyImage: painterReadyImage,
+    painterReadyBackground: painterReadyBackground,
     paintFromDecomposedQs: paintDecomposedQs,
   };
 }(L, V, P);
