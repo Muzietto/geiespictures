@@ -15,22 +15,22 @@ describe('an image painter for composite canvases', () => {
   it('groups data belonging to different graphic components', () => {
 
     var input = '&textbox1_x=123&textbox2_x=234' +
-      '&image0_url=some_url&bkgImg12_url=some_other_url' +
-      '&order=image0%2Ctextbox1%2Ctextbox2' +
+      '&custImg0_url=some_url&bkgImg12_url=some_other_url' +
+      '&order=custImg0%2Ctextbox1%2Ctextbox2' +
       '&textbox1_y=345&textbox2_valign=C';
 
     var output = {
       process: {
         order: [
           'bkgImg12',
-          'image0',
+          'custImg0',
           'textbox1',
           'textbox2',
         ],
       },
       components: {
-        image: {
-          image0: {
+        custImg: {
+          custImg0: {
             url: 'some_url',
           },
         },
@@ -125,7 +125,6 @@ describe('an image painter for composite canvases', () => {
 
       expect(actual.object).to.be.eql(resultImage);
       expect(actual.frame.c).to.be.eql(resultFrame.c);
-
     });
   });
 

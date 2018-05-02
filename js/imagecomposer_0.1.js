@@ -112,6 +112,8 @@ var IC = function (L, V, P) {
 
     decodQs.process.order.forEach(canvasComponentName => {
 
+      canvasComponentName = canvasComponentName.trim();
+
       var canvasComponentType = /[a-zA-Z]+/.exec(canvasComponentName)[0];
 
       switch (canvasComponentType) {
