@@ -13,9 +13,10 @@ var IC = function (L, V, P) {
 
     var qsPieces = splitQuerystring(qs);
     var components = componentsData(qsPieces);
+    let process = processData(qsPieces, components);
 
     return {
-      process: processData(qsPieces, components),
+      process: process,
       components: components,
     };
 
@@ -39,7 +40,10 @@ var IC = function (L, V, P) {
             acc.order = [canvasBackground].concat(canvasComponents);
             break;
           }
-
+          case 'resol': {
+            acc.resol = curr.split('=')[1];
+            break;
+          }
           default: {
           }
         }
@@ -136,6 +140,18 @@ var IC = function (L, V, P) {
     };
   }
 
+  function dimensionedCanvas(qs) {
+    var resolValues = (decomposedQs(qs).process.resol || '630x310')
+      .split('x')
+      .map(str => parseInt(str, 10));
+
+    var resultCanvas = document.createElement('canvas');
+    resultCanvas.width = resolValues[0];
+    resultCanvas.height = resolValues[1];
+
+    return resultCanvas;
+  }
+
   function paintDecomposedQs(qs, ctx) {
     var PAINT_CONTROL_FRAME = false;
     var decodQs = decomposedQs(qs);
@@ -185,5 +201,6 @@ var IC = function (L, V, P) {
     painterReadyImage: painterReadyImage,
     painterReadyBackground: painterReadyBackground,
     paintFromDecomposedQs: paintDecomposedQs,
+    dimensionedCanvas: dimensionedCanvas,
   };
 }(L, V, P);

@@ -9,9 +9,8 @@
  */
 (function () {
 
-  var c = document.getElementById('myCanvas');
+  var canvasParent = document.getElementById('canvasParent');
   var but = document.getElementById('theButton');
-  var ctx = c.getContext('2d');
   var qsTextarea = document.getElementById('querystring');
   var screamPic = document.getElementById('scream');
   var rogersPic = document.getElementById('rogers');
@@ -23,11 +22,16 @@
 
   function repaintCanvas() {
 
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
     setTimeout(() => {
 
-      IC.paintFromDecomposedQs(qsTextarea.value, ctx);
+      var mainCanvas = IC.dimensionedCanvas(qsTextarea.value);
+      while (canvasParent.firstChild) {
+        canvasParent.removeChild(canvasParent.firstChild);
+      }
+
+      canvasParent.appendChild(mainCanvas);
+
+      IC.paintFromDecomposedQs(qsTextarea.value, mainCanvas.getContext('2d'));
 
     }, 200);
   }
