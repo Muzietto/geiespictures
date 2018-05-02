@@ -5759,7 +5759,7 @@ exports.trim = function(str){
 };
 
 /**
- * Parse the given `qs`.
+ * Parse the given `inputQs`.
  *
  * @param {String} qs
  * @return {Object}

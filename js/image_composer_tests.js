@@ -155,7 +155,6 @@ describe('an image painter for composite canvases', () => {
 
 });
 
-
 function probe() {
   return {
     origin: {x: 0, y: 0},

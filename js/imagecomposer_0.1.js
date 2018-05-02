@@ -107,7 +107,7 @@ var IC = function (L, V, P) {
     };
   }
 
-  function paintFromDecomposedQs(qs, ctx) {
+  function paintDecomposedQs(qs, ctx) {
     var decodQs = decomposedQs(qs);
 
     decodQs.process.order.forEach(canvasComponentName => {
@@ -128,6 +128,6 @@ var IC = function (L, V, P) {
     decomposedQs: decomposedQs,
     painterReadyText: painterReadyText,
     painterReadyImage: painterReadyImage,
-    paintFromDecomposedQs: paintFromDecomposedQs,
+    paintFromDecomposedQs: paintDecomposedQs,
   };
 }(L, V, P);
