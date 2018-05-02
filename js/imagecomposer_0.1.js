@@ -88,14 +88,16 @@ var IC = function (L, V, P) {
     var edgeX = V.rotate_vect(V.make_vect(parseInt(qsTextboxObj.w, 10), 0), rotationRads);
     var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsTextboxObj.h, 10)), rotationRads);
 
-    var fontFamily = qsTextboxObj.fontFamily || 'Arial';
-    var fontSize = (qsTextboxObj.font || '20') + 'px';
 
     return {
       object: {
         text: decodeURIComponent(qsTextboxObj.text) || 'undefined',
-        font: fontSize + ' ' + fontFamily,
+        fontFamily: qsTextboxObj.fontFamily || 'Arial',
+        fontSize: parseInt((qsTextboxObj.font || '20'), 10),
+        maxFontSize: parseInt((qsTextboxObj.maxFontSize || '300'), 10),
         color: qsTextboxObj.fontColor || 'black',
+        width: qsTextboxObj.w,
+        height: qsTextboxObj.h,
       },
       frame: P.make_frame(origin, edgeX, edgeY),
     };
@@ -135,7 +137,7 @@ var IC = function (L, V, P) {
   }
 
   function paintDecomposedQs(qs, ctx) {
-    var PAINT_CONTROL_FRAME = true;
+    var PAINT_CONTROL_FRAME = false;
     var decodQs = decomposedQs(qs);
 
     decodQs.process.order.forEach(canvasComponentName => {

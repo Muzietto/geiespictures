@@ -165,8 +165,15 @@ var P = function (L, V) {
 
     ctx.textAlign = textObj.align || 'left';
     ctx.textBaseline = textObj.baseline || 'hanging';
-    ctx.font = textObj.font;
+    //ctx.font = actualFontSize + 'px ' + textObj.fontFamily;
     ctx.fillStyle = textObj.color || 'black';
+
+    var actualFontSize = textObj.maxFontSize;
+
+    do {
+      actualFontSize--;
+      ctx.font = actualFontSize + 'px ' + textObj.fontFamily;
+    } while (ctx.measureText(textObj.text).width > textObj.width);
 
     ctx.fillText(textObj.text, 0, 0);
 
