@@ -24,25 +24,34 @@ var IC = function (L, V, P) {
     }
 
     function processData(arra, components) {
-      return arra.reduce((acc, curr) => {
-        switch (curr.substr(0, 5)) {
+
+      let result = arra.reduce((acc, curr) => {
+
+        if (curr === '') return acc;
+
+        switch (curr.split('=')[0]) {
+
           case 'order': {
             var canvasBackground = (components.bkgImg)
               ? Object.keys(components.bkgImg)[0]
               : 'nullBackground';
             var canvasComponents = decodeURIComponent(curr.split('=')[1]).split(',');
             acc.order = [canvasBackground].concat(canvasComponents);
+            break;
           }
+
           default: {
           }
         }
         return acc;
       }, {});
+
+      return result;
     }
 
     function componentsData(arra) {
 
-      return arra.reduce((acc, curr) => {
+      let result = arra.reduce((acc, curr) => {
 
         if (!curr) return acc;
 
@@ -62,6 +71,8 @@ var IC = function (L, V, P) {
 
         return acc;
       }, {});
+
+      return result;
     }
 
   }
@@ -95,7 +106,7 @@ var IC = function (L, V, P) {
       : 0;
     var rotationRads = V.rotation_matrix(Math.PI * rotationDeg / 180);
 
-    var origin = V.make_vect(qsImageObj.x, qsImageObj.y);
+    var origin = V.make_vect(parseInt(qsImageObj.x, 10), parseInt(qsImageObj.y, 10));
     var edgeX = V.rotate_vect(V.make_vect(parseInt(qsImageObj.w, 10), 0), rotationRads);
     var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsImageObj.h, 10)), rotationRads);
 
@@ -108,6 +119,7 @@ var IC = function (L, V, P) {
   }
 
   function paintDecomposedQs(qs, ctx) {
+    var PAINT_CONTROL_FRAME = true;
     var decodQs = decomposedQs(qs);
 
     decodQs.process.order.forEach(canvasComponentName => {
@@ -120,7 +132,18 @@ var IC = function (L, V, P) {
         case 'textbox': {
           var painterReadyObj = painterReadyText(decodQs.components.textbox[canvasComponentName]);
 
-          P.text_painter(painterReadyObj.object)(painterReadyObj.frame, true)(ctx);
+          P.text_painter(painterReadyObj.object)(painterReadyObj.frame, PAINT_CONTROL_FRAME)(ctx);
+
+          break;
+        }
+        case 'custImg': {
+          var painterReadyObj = painterReadyImage(decodQs.components.custImg[canvasComponentName]);
+
+          var img = document.getElementById(painterReadyObj.object.url);
+          // TODO - put here promise-based logic for url retrieval instead of previous line
+          P.picture_painter(img)(painterReadyObj.frame, PAINT_CONTROL_FRAME)(ctx);
+
+          break;
         }
       }
     });

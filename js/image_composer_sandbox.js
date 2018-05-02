@@ -10,13 +10,14 @@
 (function () {
 
   var c = document.getElementById('myCanvas');
+  var but = document.getElementById('theButton');
   var ctx = c.getContext('2d');
   var qsTextarea = document.getElementById('querystring');
   var screamPic = document.getElementById('scream');
   var rogersPic = document.getElementById('rogers');
   var gwenPic = document.getElementById('gwen');
 
-  qsTextarea.addEventListener('keypress', onTextareaChange);
+  but.addEventListener('click', repaintCanvas);
 
   repaintCanvas();
 
@@ -29,16 +30,5 @@
       IC.paintFromDecomposedQs(qsTextarea.value, ctx);
 
     }, 200);
-  }
-
-  function onTextareaChange() {
-    var key = window.event.keyCode;
-    if (key === 13) {
-      repaintCanvas();
-      return false;
-    }
-    else {
-      return true;
-    }
   }
 })();
