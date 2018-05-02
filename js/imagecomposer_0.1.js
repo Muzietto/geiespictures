@@ -103,7 +103,7 @@ var IC = function (L, V, P) {
         width: qsTextboxObj.w,
         height: qsTextboxObj.h,
         align: alignMapper(qsTextboxObj.align || 'left'),
-        baseline: valignMapper(qsTextboxObj.valign || 'hanging'),
+        baseline: valignMapper(qsTextboxObj.valign || 'B'),
       },
       frame: P.make_frame(origin, edgeX, edgeY),
     };

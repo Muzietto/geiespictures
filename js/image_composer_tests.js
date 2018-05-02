@@ -67,7 +67,7 @@ describe('an image painter for composite canvases', () => {
         h: '100',
         text: 'lorem ipsum',
         align: 'L',
-        valign: 'C',
+        valign: 'M',
         valignMethod: 'v',
         font: '17',
         rotateAngleForWholeTextbox: '30',
@@ -84,6 +84,8 @@ describe('an image painter for composite canvases', () => {
         height: '100',
         maxFontSize: 96,
         color: 'red',
+        align: 'left',
+        baseline: 'middle',
       };
 
       let rotation = V.rotation_matrix(Math.PI / 6);
