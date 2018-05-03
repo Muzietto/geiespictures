@@ -175,7 +175,7 @@ describe('an image painter for composite canvases', () => {
     };
 
     it('by using the decomposed querystring as context', function () {
-      debugger;
+
       var qs = input();
       var qsTextboxObj = IC.decomposedQs(qs).components.textbox.textbox0;
 
@@ -185,8 +185,9 @@ describe('an image painter for composite canvases', () => {
 
       var secondStepResult = secondStepMonad(qsTextboxObj);
 
+      expect(P.origin_frame(secondStepResult.frame).c).to.be.eql('[1000,650]');
+      expect(secondStepResult.object.text).to.be.eql('lorem ipsum');
 
-      var pippo = 12;
 
       function input() {
         return '&textbox0_x=1000&textbox0_effect=null&textbox0_h=100' +
