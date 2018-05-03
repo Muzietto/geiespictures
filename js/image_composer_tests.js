@@ -134,6 +134,69 @@ describe('an image painter for composite canvases', () => {
     });
   });
 
+  describe.only('the reader monad can assist IC.painterReadyText', function () {
+    var reader = MONAD.reader,
+      unit = MONAD.reader.UNIT,
+      ask = MONAD.reader.ask,
+      asks = MONAD.reader.asks,
+      local = MONAD.reader.local
+    ;
+
+    var greet = name => ask().bind(ctx => {
+      //debugger;
+      return unit(ctx + ', ' + name);
+    });
+
+    var firstStepMonad = ask().bind(qsTextboxObj => {
+
+      var rotationDeg = (qsTextboxObj.rotateAngleForWholeTextbox)
+        ? parseFloat(qsTextboxObj.rotateAngleForWholeTextbox)
+        : 0;
+      var rotationRads = V.rotation_matrix(Math.PI * rotationDeg / 180);
+
+      var origin = V.make_vect(parseInt(qsTextboxObj.x, 10), parseInt(qsTextboxObj.y, 10));
+      var edgeX = V.rotate_vect(V.make_vect(parseInt(qsTextboxObj.w, 10), 0), rotationRads);
+      var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsTextboxObj.h, 10)), rotationRads);
+
+      return unit({
+        frame: P.make_frame(origin, edgeX, edgeY),
+      });
+    });
+
+    var secondStepMonadicFunction = partialResult => {
+
+      return ask().bind(qsTextboxObj => {
+        partialResult.object = {
+          text: decodeURIComponent(qsTextboxObj.text) || 'undefined',
+        };
+
+        return unit(partialResult);
+      });
+    };
+
+    it('by using the decomposed querystring as context', function () {
+      debugger;
+      var qs = input();
+      var qsTextboxObj = IC.decomposedQs(qs).components.textbox.textbox0;
+
+      var firstStepResult = firstStepMonad(qsTextboxObj);
+
+      var secondStepMonad = firstStepMonad.bind(secondStepMonadicFunction);
+
+      var secondStepResult = secondStepMonad(qsTextboxObj);
+
+
+      var pippo = 12;
+
+      function input() {
+        return '&textbox0_x=1000&textbox0_effect=null&textbox0_h=100' +
+          '&textbox0_w=900&textbox0_font=17&textbox0_fontColor=red' +
+          '&textbox0_text=lorem%20ipsum&textbox0_align=R&textbox0_y=650' +
+          '&textbox0_valign=A&textbox0_maxFontSize=400';
+      }
+    });
+  });
+
   xdescribe('can invoke geiespictures painters after reading a querystring', () => {
 
     it('containing one text', () => {
