@@ -12,16 +12,16 @@ var expect = chai.expect;
 
 describe('an image painter for composite canvases', () => {
 
-  it('groups data belonging to different graphic components', () => {
+  it('groups data belonging to different graphic components, ordering them correctly', () => {
 
     var input = '&textbox1_x=123&textbox2_x=234' +
       '&custImg0_url=some_url&bkgImg12_url=some_other_url' +
-      '&order=custImg0%2Ctextbox1%2Ctextbox2' +
+      '&objectOrder=custImg0%2Ctextbox1%2Ctextbox2' +
       '&textbox1_y=345&textbox2_valign=C';
 
     var output = {
       process: {
-        order: [
+        objectOrder: [
           'bkgImg12',
           'custImg0',
           'textbox1',
@@ -47,6 +47,44 @@ describe('an image painter for composite canvases', () => {
           textbox2: {
             x: '234',
             valign: 'C',
+          },
+        },
+      },
+    };
+
+    let result = IC.decomposedQs(input);
+    expect(result).to.be.eql(output);
+  });
+
+  it('handles correctly image effects found in the url', () => {
+
+    var input = '&objectOrder=custImg0&resol=1200x630' +
+      '&custImg0_x=120&custImg0_y=120&custImg0_w=400&custImg0_h=400' +
+      '&custImg0_url=https%3A%2F%2Fic-editor-cliparts.social-net.me%2Fplaceholders%2Fplaceholder.png' +
+      '&custImg0_effectFlip_param=%7B%22op%22%3A%22flipImage%22%7D' +
+      '&custImg0_effectFlop_param=%7B%22op%22%3A%22flopImage%22%7D' +
+      '&custImg0_cacheVer=1&custImg0_effect=Flip%2CFlop';
+
+    var output = {
+      process: {
+        resol: '1200x630',
+        objectOrder: [
+          'nullBackground',
+          'custImg0',
+        ],
+      },
+      components: {
+        custImg: {
+          custImg0: {
+            x: '120',
+            y: '120',
+            w: '400',
+            h: '400',
+            url: 'https://ic-editor-cliparts.social-net.me/placeholders/placeholder.png',
+            effectFlip_param: '{"op":"flipImage"}',
+            effectFlop_param: '{"op":"flopImage"}',
+            cacheVer: '1',
+            effect: ['Flip', 'Flop'],
           },
         },
       },
@@ -134,20 +172,15 @@ describe('an image painter for composite canvases', () => {
     });
   });
 
-  describe.only('the reader monad can assist IC.painterReadyText', function () {
-    var reader = MONAD.reader,
+  xdescribe('can use the reader monad to assist IC.painterReadyText', function () {
+    var reader = MONAD.reader.reader,
       unit = MONAD.reader.UNIT,
       ask = MONAD.reader.ask,
       asks = MONAD.reader.asks,
       local = MONAD.reader.local
     ;
 
-    var greet = name => ask().bind(ctx => {
-      //debugger;
-      return unit(ctx + ', ' + name);
-    });
-
-    var firstStepMonad = ask().bind(qsTextboxObj => {
+    var frameCalculationMonad = ask().bind(qsTextboxObj => {
 
       var rotationDeg = (qsTextboxObj.rotateAngleForWholeTextbox)
         ? parseFloat(qsTextboxObj.rotateAngleForWholeTextbox)
@@ -163,9 +196,26 @@ describe('an image painter for composite canvases', () => {
       });
     });
 
-    var secondStepMonadicFunction = partialResult => {
+    var textContentCalculationMethod = partialResult => {
 
       return ask().bind(qsTextboxObj => {
+
+        partialResult.object = {
+          text: decodeURIComponent(qsTextboxObj.text) || 'undefined',
+        };
+
+        return unit(partialResult);
+      });
+    };
+
+    var frameFlipCalculationMethod = partialResult => {
+
+      return ask().bind(qsTextboxObj => {
+
+        if (qsTextboxObj.effect.contains('Flop')) { // flip X
+
+
+        }
         partialResult.object = {
           text: decodeURIComponent(qsTextboxObj.text) || 'undefined',
         };
@@ -179,9 +229,9 @@ describe('an image painter for composite canvases', () => {
       var qs = input();
       var qsTextboxObj = IC.decomposedQs(qs).components.textbox.textbox0;
 
-      var firstStepResult = firstStepMonad(qsTextboxObj);
+      var firstStepResult = frameCalculationMonad(qsTextboxObj);
 
-      var secondStepMonad = firstStepMonad.bind(secondStepMonadicFunction);
+      var secondStepMonad = frameCalculationMonad.bind(textContentCalculationMethod);
 
       var secondStepResult = secondStepMonad(qsTextboxObj);
 
@@ -193,7 +243,9 @@ describe('an image painter for composite canvases', () => {
         return '&textbox0_x=1000&textbox0_effect=null&textbox0_h=100' +
           '&textbox0_w=900&textbox0_font=17&textbox0_fontColor=red' +
           '&textbox0_text=lorem%20ipsum&textbox0_align=R&textbox0_y=650' +
-          '&textbox0_valign=A&textbox0_maxFontSize=400';
+          '&textbox0_valign=A&textbox0_maxFontSize=400' +
+          '&textbox0_effectFlop_param=%7B%22op%22%3A%22flopImage%22%7D' + // actually textboxes cannot be flipped
+          '&textbox0_effect=Flop';
       }
     });
   });
@@ -203,7 +255,7 @@ describe('an image painter for composite canvases', () => {
     it('containing one text', () => {
 
       var qsText = '&textbox1_x=123&textbox1_effect=null&textbox1_h=100&textbox1_w=300&textbox1_font=17' +
-        '&order=textbox1&textbox1_fontcolor=red&textbox1_text=lorem+ipsum&textbox1_align=L' +
+        '&objectOrder=textbox1&textbox1_fontcolor=red&textbox1_text=lorem+ipsum&textbox1_align=L' +
         '&textbox1_y=345&textbox1_valign=C&textbox1_maxFontSize=96&textbox1_valignMethod=v' +
         '&textbox1_rotateAngleForWholeTextbox=30';
 

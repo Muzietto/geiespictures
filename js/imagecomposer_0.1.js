@@ -32,12 +32,12 @@ var IC = function (L, V, P) {
 
         switch (curr.split('=')[0]) {
 
-          case 'order': {
+          case 'objectOrder': {
             var canvasBackground = (components.bkgImg)
               ? Object.keys(components.bkgImg)[0]
               : 'nullBackground';
             var canvasComponents = decodeURIComponent(curr.split('=')[1]).split(',');
-            acc.order = [canvasBackground].concat(canvasComponents);
+            acc.objectOrder = [canvasBackground].concat(canvasComponents);
             break;
           }
           case 'resol': {
@@ -60,18 +60,31 @@ var IC = function (L, V, P) {
         if (!curr) return acc;
 
         var qsKey = curr.split('=')[0];
+        if (['objectOrder', 'resol'].includes(qsKey)) return acc;
+
         var qsValue = curr.split('=')[1];
-        var canvasComponentName = qsKey.split('_')[0];
-        if (canvasComponentName === 'order') return acc;
+
+        var splitKey = /(^[^_]+)_(.+$)/.exec(qsKey);
+        var canvasComponentName = splitKey[1];
+        var paramName = splitKey[2];
+
 
         var canvasComponentType = /[a-zA-Z]+/.exec(canvasComponentName)[0];
-        var paramName = qsKey.split('_')[1];
 
         if (!acc[canvasComponentType]) acc[canvasComponentType] = {};
         if (!acc[canvasComponentType][canvasComponentName])
           acc[canvasComponentType][canvasComponentName] = {};
 
-        acc[canvasComponentType][canvasComponentName][paramName] = qsValue;
+        switch (paramName) {
+
+          case 'effect': {
+            acc[canvasComponentType][canvasComponentName][paramName] = decodeURIComponent(qsValue).split(',');
+            break;
+          }
+          default: {
+            acc[canvasComponentType][canvasComponentName][paramName] = decodeURIComponent(qsValue);
+          }
+        }
 
         return acc;
       }, {});
@@ -174,7 +187,7 @@ var IC = function (L, V, P) {
     var PAINT_CONTROL_FRAME = false;
     var decodQs = decomposedQs(qs);
 
-    decodQs.process.order.forEach(canvasComponentName => {
+    decodQs.process.objectOrder.forEach(canvasComponentName => {
 
       canvasComponentName = canvasComponentName.trim();
 
