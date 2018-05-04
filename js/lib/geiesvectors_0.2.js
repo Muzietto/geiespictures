@@ -6,6 +6,7 @@ var V = geiesvectors = function (L) {
 
   var length_vect = v => Math.sqrt(Math.pow(xcor_vect(v), 2) + Math.pow(ycor_vect(v), 2));
 
+  var inverse_vect = v => make_vect(-xcor_vect(v), -ycor_vect(v));
   var add_vect = (v1, v2) => make_vect(xcor_vect(v1) + xcor_vect(v2), ycor_vect(v1) + ycor_vect(v2));
   var sub_vect = (v1, v2) => make_vect(xcor_vect(v1) - xcor_vect(v2), ycor_vect(v1) - ycor_vect(v2));
 
@@ -89,6 +90,7 @@ var V = geiesvectors = function (L) {
     xcor_vect: xcor_vect,
     ycor_vect: ycor_vect,
     length_vect: length_vect,
+    inverse_vect: inverse_vect,
     add_vect: add_vect,
     sub_vect: sub_vect,
     scale_vect: scale_vect,

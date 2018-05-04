@@ -193,6 +193,19 @@ var P = function (L, V) {
     return painter(newFrame, paintFrame);
   };
 
+  var transform_frame = (frame, origin, xAxis, yAxis) => {
+
+    var mapper = frame_coord_map(frame);
+
+    var newFrame = P.make_frame(
+      mapper(origin),
+      V.sub_vect(mapper(xAxis), mapper(origin)),
+      V.sub_vect(mapper(yAxis), mapper(origin))
+    );
+
+    return newFrame;
+  };
+
   var beside = (p1, p2) => {
     var leftPainter = transform_painter(p1, V.make_vect(0, 0), V.make_vect(0.5, 0), V.make_vect(0, 1));
     var rightPainter = transform_painter(p2, V.make_vect(0.5, 0), V.make_vect(1, 0), V.make_vect(0.5, 1));
@@ -260,6 +273,32 @@ var P = function (L, V) {
     V.make_vect(0, 0));// new END of yAxe in old frame coords
 
   var flip_horiz = painter => transform_painter(painter,
+    V.make_vect(1, 0), // new origin
+    V.make_vect(0, 0), // new END of xAxe
+    V.make_vect(1, 1));// new END of yAxe
+
+  // TODO - verify this new method
+  var flip_frame_vert = frame => make_frame(
+    V.add_vect(P.origin_frame(frame), P.edge2_frame(frame)),
+    P.edge1_frame(frame),
+    V.inverse_vect(P.edge2_frame(frame))
+  );
+
+  var flip_frame_vert_wrong = frame => transform_frame(
+    frame,
+    V.make_vect(0, 1), // new origin
+    V.make_vect(1, 1), // new END of xAxe in old frame coords
+    V.make_vect(0, 0));// new END of yAxe in old frame coords
+
+  // TODO - adjust this method
+  var flip_frame_horiz = frame => transform_frame(
+    frame,
+    V.make_vect(1, 0), // new origin
+    V.make_vect(0, 0), // new END of xAxe
+    V.make_vect(1, 1));// new END of yAxe
+
+  var flip_frame_horiz_wrong = frame => transform_frame(
+    frame,
     V.make_vect(1, 0), // new origin
     V.make_vect(0, 0), // new END of xAxe
     V.make_vect(1, 1));// new END of yAxe
@@ -433,6 +472,8 @@ var P = function (L, V) {
     diamond_painter: diamond_painter,
     flip_vert: flip_vert,
     flip_horiz: flip_horiz,
+    flip_frame_vert: flip_frame_vert,
+    flip_frame_horiz: flip_frame_horiz,
     shrink_to_upper_right: shrink_to_upper_right,
     beside: beside,
     atop: atop,

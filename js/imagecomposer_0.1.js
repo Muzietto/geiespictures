@@ -149,12 +149,27 @@ var IC = function (L, V, P) {
     var edgeX = V.rotate_vect(V.make_vect(parseInt(qsImageObj.w, 10), 0), rotationRads);
     var edgeY = V.rotate_vect(V.make_vect(0, parseInt(qsImageObj.h, 10)), rotationRads);
 
-    return {
+    let result = {
       object: {
         url: qsImageObj.url,
       },
       frame: P.make_frame(origin, edgeX, edgeY),
     };
+
+    (Object.keys(qsImageObj)).forEach(key => {
+
+      switch (key) {
+        case 'effectFlip_param': {
+          result.frame = P.flip_frame_vert(result.frame);
+        }
+        case 'effectFlop_param': {
+          result.frame = P.flip_frame_horiz(result.frame);
+        }
+        default:
+      }
+    });
+
+    return result;
   }
 
   function painterReadyBackground(qsBackgroundObj) {
@@ -184,7 +199,7 @@ var IC = function (L, V, P) {
   }
 
   function paintDecomposedQs(qs, ctx) {
-    var PAINT_CONTROL_FRAME = false;
+    var PAINT_CONTROL_FRAME = true;
     var decodQs = decomposedQs(qs);
 
     decodQs.process.objectOrder.forEach(canvasComponentName => {
