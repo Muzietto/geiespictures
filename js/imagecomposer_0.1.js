@@ -199,7 +199,7 @@ var IC = function (L, V, P) {
   }
 
   function paintDecomposedQs(qs, ctx) {
-    var PAINT_CONTROL_FRAME = true;
+    var PAINT_CONTROL_FRAME = false;
     var decodQs = decomposedQs(qs);
 
     decodQs.process.objectOrder.forEach(canvasComponentName => {
