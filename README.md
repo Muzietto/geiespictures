@@ -2,7 +2,7 @@
 
 The [picture language](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.4) from chapter 2 of SICP.
 
-[ImageComposer.html](http://rawgit.com/Muzietto/geiespictures/master/ImageComposer.html): draw on a canvas starting from an URL.
+[ImageComposer.html](http://rawgit.com/Muzietto/geiespictures/master/ImageComposer.html): draw on a canvas starting from an URL (here are its [unit tests](http://rawgit.com/Muzietto/geiespictures/master/MochaGeiespicturesTests.html)).
 
 [CompositePictureSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/CompositePictureSandbox.html)
 
