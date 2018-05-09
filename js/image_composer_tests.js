@@ -172,7 +172,7 @@ describe('an image painter for composite canvases', () => {
     });
   });
 
-  xdescribe('can use the reader monad to assist IC.painterReadyText', function () {
+  describe('could use the reader monad to assist IC.painterReadyText', function () {
     var reader = MONAD.reader.reader,
       unit = MONAD.reader.UNIT,
       ask = MONAD.reader.ask,
@@ -224,7 +224,7 @@ describe('an image painter for composite canvases', () => {
       });
     };
 
-    it('by using the decomposed querystring as context', function () {
+    it('by providing the decomposed querystring as context whenever ask-ed', function () {
 
       var qs = input();
       var qsTextboxObj = IC.decomposedQs(qs).components.textbox.textbox0;
@@ -250,7 +250,7 @@ describe('an image painter for composite canvases', () => {
     });
   });
 
-  xdescribe('can invoke geiespictures painters after reading a querystring', () => {
+  describe('can invoke geiespictures painters after reading a querystring', () => {
 
     it('containing one text', () => {
 
