@@ -280,7 +280,7 @@ describe('a sound picture system entails', function () {
 
   });
 
-  describe('painters that use the center of a canvas as origin and flip its y-axe, like', () => {
+  describe('painters that use the center of a canvas as origin and flip its y-axe to be positive upwards, like', () => {
     it('a single_dot_painterSICP that takes a point in a frame and converts its coordinates into DOM canvas pixel coords', function () {
 
       var origin = V.make_vect(-100, 25);
@@ -472,7 +472,200 @@ describe('a sound picture system entails', function () {
     });
   });
 
-  describe('functions to manipulate painters', () => {
+  describe('a flip_vert painter that flips another painter around its x-axis', () => {
+    describe('in a y-upward, canvas-center as origin frame of reference', () => {
+      it('when the local x-axis is not rotated', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(100, 0);
+        var edge2 = V.make_vect(0, 50);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(75);
+      });
+
+      it('when the local x-axis is rotated 90deg', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(0, 50); // NB: local x-axe is rotated 90deg
+        var edge2 = V.make_vect(-100, 0);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+      });
+    });
+
+    describe.only('in a y-downward, canvas top-left corner as origin frame of reference', () => {
+      it('when the local x-axis is not rotated', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(100, 0);
+        var edge2 = V.make_vect(0, 50);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(75);
+      });
+
+      it('when the local x-axis is rotated 90deg', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(0, 50); // NB: local x-axe is rotated 90deg
+        var edge2 = V.make_vect(-100, 0);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+      });
+    });
+  });
+
+  describe('a flip_horiz painter that flips another painter around its y-axis', () => {
+    describe('in a y-downward, canvas top-left corner as origin frame of reference', () => {
+      it('when the local x-axis is not rotated', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(100, 0);
+        var edge2 = V.make_vect(0, 50);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(200);
+        expect(testProbe.centerY).to.be.equal(75);
+      });
+
+      it('when the local x-axis is rotated 90deg', () => {
+
+        var origin = V.make_vect(-100, 25);
+        var edge1 = V.make_vect(0, 50); // NB: local x-axe is rotated 90deg
+        var edge2 = V.make_vect(-100, 0);
+        var fram1 = P.make_frame(origin, edge1, edge2);
+
+        var testProbe = probe();
+        var fakeContext = fakeCtx()(testProbe); // canvas 400x200
+
+        // drawing a point in the frame origin
+        var origgio = V.make_vect(0, 0);
+        P.single_dot_painterSICP(origgio)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        P.flip_vert(P.single_dot_painterSICP(origgio))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(75);
+
+        // drawing a point in (1,1)
+        let unouno = V.make_vect(1, 1);
+        P.single_dot_painterSICP(unouno)(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(0);
+        expect(testProbe.centerY).to.be.equal(25);
+
+        P.flip_vert(P.single_dot_painterSICP(unouno))(fram1)(fakeContext);
+        expect(testProbe.centerX).to.be.equal(100);
+        expect(testProbe.centerY).to.be.equal(25);
+      });
+    });
   });
 
 });
