@@ -202,6 +202,7 @@ var IC = function (L, V, P) {
     var PAINT_CONTROL_FRAME = false;
     var decodQs = decomposedQs(qs);
 
+    // ugly hack involving setTimeout - rewrite using promises!!
     decodQs.process.objectOrder.forEach(canvasComponentName => {
 
       canvasComponentName = canvasComponentName.trim();
@@ -209,6 +210,10 @@ var IC = function (L, V, P) {
       var canvasComponentType = /[a-zA-Z]+/.exec(canvasComponentName)[0];
 
       switch (canvasComponentType) {
+
+        case 'nullBackground': {
+          break;
+        }
         case 'textbox': {
           var painterReadyObj = painterReadyText(decodQs.components.textbox[canvasComponentName]);
 
@@ -222,8 +227,9 @@ var IC = function (L, V, P) {
         case 'custImg': {
           var painterReadyObj = painterReadyImage(decodQs.components.custImg[canvasComponentName]);
 
-          var img = document.getElementById(painterReadyObj.object.url);
+          var img = document.getElementById(painterReadyObj.object.url) || {width: 100, height: 120};
           // TODO - put here promise-based logic for url retrieval instead of previous line
+          // TODO - put also injection point for test mocks
           P.picture_painter(img)(painterReadyObj.frame, PAINT_CONTROL_FRAME)(ctx);
 
           break;

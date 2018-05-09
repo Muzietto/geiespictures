@@ -252,7 +252,7 @@ describe('an image painter for composite canvases', () => {
 
   describe('can invoke geiespictures painters after reading a querystring', () => {
 
-    it('containing one text', () => {
+    it('containing one rotated text', () => {
 
       var qsText = '&textbox1_x=123&textbox1_effect=null&textbox1_h=100&textbox1_w=300&textbox1_font=17' +
         '&objectOrder=textbox1&textbox1_fontcolor=red&textbox1_text=lorem+ipsum&textbox1_align=L' +
@@ -263,14 +263,37 @@ describe('an image painter for composite canvases', () => {
 
       IC.paintFromDecomposedQs(qsText, fakeCtx()(testProbe));
 
-      var rotationMatrix = V.rotation_matrix(Math.PI * 30 / 180);
-      var rotationAngle = V.angle_vect(V.rotate_vect(V.make_vect(100, 0), rotationMatrix));
+      setTimeout(() => {
 
-      expect(testProbe.textPosX).to.be.eql(123);
-      expect(testProbe.textPosY).to.be.eql(345);
-      expect(testProbe.text).to.be.eql('lorem+ipsum');
-      expect(testProbe.rotation).to.be.eql(rotationAngle);
+        var rotationMatrix = V.rotation_matrix(Math.PI * 30 / 180);
+        var rotationAngle = V.angle_vect(V.rotate_vect(V.make_vect(100, 0), rotationMatrix));
 
+        expect(testProbe.textPosX).to.be.eql(123);
+        expect(testProbe.textPosY).to.be.eql(345);
+        expect(testProbe.text).to.be.eql('lorem+ipsum');
+        expect(testProbe.rotation).to.be.eql(rotationAngle);
+      }, 300);
+    });
+
+    it('containing one rotated image', () => {
+
+      var qsImage = '&custImg0_url=rogers&custImg0_finalRotateAngle=-15' +
+        '&custImg0_x=500&custImg0_y=50&custImg0_h=400&custImg0_w=350' +
+        '&objectOrder=custImg0';
+
+      var testProbe = probe();
+
+      IC.paintFromDecomposedQs(qsImage, fakeCtx()(testProbe));
+
+      setTimeout(() => {
+
+        var rotationMatrix = V.rotation_matrix(Math.PI * -15 / 180);
+        var rotationAngle = V.angle_vect(V.rotate_vect(V.make_vect(100, 0), rotationMatrix));
+
+        expect(testProbe.origin.x).to.be.eql(500);
+        expect(testProbe.origin.y).to.be.eql(50);
+        expect(testProbe.rotation).to.be.eql(rotationAngle);
+      }, 300);
     });
   });
 
@@ -280,6 +303,7 @@ function probe() {
   return {
     origin: {x: 0, y: 0},
     rotation: 0,
+    url: '',
   };
 }
 
@@ -290,6 +314,11 @@ function fakeCtx() {
       canvas: {
         clientWidth: 400,
         clientHeight: 200
+      },
+      drawImage: (url, x, y) => {
+        probe.url = url;
+        probe.origin.x = x;
+        probe.origin.y = y;
       },
       resetTransform: () => {
       },
