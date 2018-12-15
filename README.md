@@ -2,11 +2,11 @@
 
 The [picture language](https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-15.html#%_sec_2.2.4) from chapter 2 of SICP.
 
-[ImageComposer.html](http://rawgit.com/Muzietto/geiespictures/master/ImageComposer.html): draw on a canvas starting from an URL (here are its [unit tests](http://rawgit.com/Muzietto/geiespictures/master/MochaImageComposerTests.html)).
+[ImageComposer.html](https://muzietto.github.io/geiespictures/ImageComposer.html): draw on a canvas starting from an URL (here are its [unit tests](https://muzietto.github.io/geiespictures/MochaImageComposerTests.html)).
 
-[CompositePictureSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/CompositePictureSandbox.html)
+[CompositePictureSandbox.html](https://muzietto.github.io/geiespictures/CompositePictureSandbox.html)
 
-[Some unit tests](http://rawgit.com/Muzietto/geiespictures/master/MochaGeiespicturesTests.html)
+[Some unit tests](https://muzietto.github.io/geiespictures/MochaGeiespicturesTests.html)
 
 NB - for more implementations from the Wizard Book, see [GeiesSICP](https://github.com/Muzietto/geiessicp)
 
@@ -14,8 +14,8 @@ NB - for more implementations from the Wizard Book, see [GeiesSICP](https://gith
 ![alt image](/img/my_rogers.jpg)
 
 ![alt image](/img/sandboxes.jpg)
-[GraphicSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/GraphicSandbox.html)
+[GraphicSandbox.html](https://muzietto.github.io/geiespictures/GraphicSandbox.html)
 
-[SquareSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/SquareSandbox.html)
+[SquareSandbox.html](https://muzietto.github.io/geiespictures/SquareSandbox.html)
 
-[RotationMatrixSandbox.html](http://rawgit.com/Muzietto/geiespictures/master/RotationMatrixSandbox.html)
+[RotationMatrixSandbox.html](https://muzietto.github.io/geiespictures/RotationMatrixSandbox.html)
